@@ -1,0 +1,27 @@
+# Visual Studio Code
+.vscode/
+
+# Visual Studio
+.vs/
+bin/
+obj/
+
+# Rider
+.idea/
+
+# Compiled files
+*.dll
+*.exe
+*.pdb
+
+# User-specific files
+*.user
+*.user.*
+
+# Logs and databases
+*.log
+*.sqlite
+
+# OS-specific files
+.DS_Store
+Thumbs.db
