@@ -1,0 +1,7 @@
+
+*.dll
+*.pdb
+*.cache
+*.targets
+TimeSeriesData/obj/Debug/net7.0/TimeSeriesData.csproj.FileListAbsolute.txt
+*.props
