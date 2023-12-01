@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeSeriesData.Tests", "TimeSeriesData.Tests\TimeSeriesData.Tests.csproj", "{69721C66-7D39-4FE3-993D-7D0726876A12}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeSeriesData", "TimeSeriesData\TimeSeriesData.csproj", "{C8048382-1C04-4224-8715-8FC757C9C92B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69721C66-7D39-4FE3-993D-7D0726876A12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69721C66-7D39-4FE3-993D-7D0726876A12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69721C66-7D39-4FE3-993D-7D0726876A12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69721C66-7D39-4FE3-993D-7D0726876A12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8048382-1C04-4224-8715-8FC757C9C92B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8048382-1C04-4224-8715-8FC757C9C92B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8048382-1C04-4224-8715-8FC757C9C92B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8048382-1C04-4224-8715-8FC757C9C92B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26CFBEC9-1CFA-4737-B94A-AC76E2CB6F00}
+	EndGlobalSection
+EndGlobal
