@@ -25,3 +25,4 @@ obj/
 # OS-specific files
 .DS_Store
 Thumbs.db
+TimeSeriesData/Functions/secret.json
