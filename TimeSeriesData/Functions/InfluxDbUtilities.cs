@@ -7,27 +7,6 @@ namespace Timeseriesdata.Functions
 
     public class InfluxDbUtilities
     {
-        public static List<Product> ConvertFluxTableToProductSalesData(FluxTable fluxTable)
-        {
-            var productSalesDataList = new List<Product>();
-
-            foreach (var fluxRecord in fluxTable.Records)
-            {
-                var instant = fluxRecord.GetTime();
-                var dateTime = instant?.ToDateTimeUtc() ?? DateTime.MinValue;
-
-                var productSalesData = new Product
-                {
-                    Product_Name = fluxRecord.GetValueByKey("product_name") as string,
-                    Units_Sold = Convert.ToInt32(fluxRecord.GetValueByKey("_value")),
-                    Time = dateTime,
-                };
-
-                productSalesDataList.Add(productSalesData);
-            }
-
-            return productSalesDataList;
-        }
 
         public static string GetTimeRangeFilter(DateTime? startTime, DateTime? endTime)
         {
