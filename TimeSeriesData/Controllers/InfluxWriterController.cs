@@ -39,4 +39,33 @@ public class InfluxWriterController : ControllerBase, IDisposable
         _client?.Dispose();
     }
 
+   [HttpPost("insert")]
+    public IActionResult InsertProductSalesData([FromBody] List<string> lineProtocolDataList, [FromQuery] string organization = "omega")
+    {
+        try
+        {
+            using var writeApi = _client.GetWriteApi();
+
+            string bucket = "Products_Sales";
+
+            foreach (var lineProtocolData in lineProtocolDataList)
+            {
+                _logger.LogInformation("InsertProductSalesData called with {count} items", lineProtocolDataList.Count);
+                _logger.LogInformation($"InsertProductSalesData called with {lineProtocolData} items");
+
+                // Write each line to InfluxDB
+                writeApi.WriteRecord($"{lineProtocolData}", WritePrecision.S, bucket, organization);
+
+                // Log the actual data being written
+                _logger.LogInformation($"Writing data: {organization},{bucket},{lineProtocolData}");
+            }
+
+            return Ok("Data inserted successfully");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while inserting data into InfluxDB.");
+            return StatusCode(500, "Internal Server Error");
+        }
+    }
 }
