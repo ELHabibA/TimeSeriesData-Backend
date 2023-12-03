@@ -47,3 +47,5 @@ TestResults/
 xamarin_*.log
 bin/
 obj/
+TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.dll
+TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.pdb
