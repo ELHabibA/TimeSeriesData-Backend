@@ -410,3 +410,13 @@
 /Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/Microsoft.AspNetCore.TestHost.dll
 /Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/Microsoft.Extensions.DependencyModel.dll
 /Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/obj/Debug/net7.0/MvcTestingAppManifest.json
+/Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/Functions/secret.json
+/Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/InfluxDB.Client.dll
+/Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/InfluxDB.Client.Core.dll
+/Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/System.Reactive.dll
+/Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/RestSharp.dll
+/Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/NodaTime.dll
+/Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/JsonSubTypes.dll
+/Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/System.Configuration.ConfigurationManager.dll
+/Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/CsvHelper.dll
+/Users/elhabib/Desktop/TimeSeriesData-V2/TimeSeriesData.Tests/bin/Debug/net7.0/System.Security.Cryptography.ProtectedData.dll
