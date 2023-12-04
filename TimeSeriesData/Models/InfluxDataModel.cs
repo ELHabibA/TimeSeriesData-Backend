@@ -6,7 +6,7 @@ namespace Timeseriesdata.Models
     public string? Measurement { get; set; }
     public Dictionary<string, object>? Fields { get; set; }
     public Dictionary<string, string>? Tags { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTime? Timestamp { get; set; }
 
     }
 }
