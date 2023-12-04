@@ -8,19 +8,6 @@ namespace Timeseriesdata.Functions
     public class InfluxDbUtilities
     {
 
-        public static string GetTimeRangeFilter(DateTime? startTime, DateTime? endTime)
-        {
-            if (startTime.HasValue && endTime.HasValue)
-            {
-                return $"|> range(start: {startTime.Value:yyyy-MM-ddTHH:mm:ss}Z, stop: {endTime.Value:yyyy-MM-ddTHH:mm:ss}Z)";
-            }
-            else
-            {
-                return "|> range(start: 0)";
-            }
-        }
-
-
         public static DateTime? ParseTime(string timeString)
         {
             if (string.IsNullOrEmpty(timeString))
