@@ -49,3 +49,8 @@ bin/
 obj/
 TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.dll
 TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.pdb
+*.dll
+*.dll
+*.pdb
+TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.Tests.dll
+TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.Tests.pdb
