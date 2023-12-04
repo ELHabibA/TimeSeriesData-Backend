@@ -49,5 +49,7 @@ bin/
 obj/
 TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.dll
 TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.pdb
-TimeSeriesData.Tests/bin/Debug/net7.0/CoverletSourceRootsMapping
-TimeSeriesData.Tests/obj/Debug/net7.0/TimeSeriesData.Tests.GeneratedMSBuildEditorConfig.editorconfig
+*.dll
+*.pdb
+*.pdb
+*.dll

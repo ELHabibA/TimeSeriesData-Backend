@@ -18,14 +18,13 @@ var influxDBClient = new InfluxDBClient(settings?.ServerUrl, settings?.Token);
 builder.Services.AddSingleton(influxDBClient);
 builder.Services.AddControllers();
 
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //builder.Services.AddScoped<IProductsService, ProductsService>();
+builder.Services.AddScoped<IInfluxWriterServices, InfluxWriterServices>();
 
 var app = builder.Build();
-
 
 if (app.Environment.IsDevelopment())
 {
