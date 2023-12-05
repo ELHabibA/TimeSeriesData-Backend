@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using InfluxDB.Client;
-using InfluxDB.Client.Api.Domain;
+
 
 
 [ApiController]
@@ -19,7 +19,7 @@ public class InfluxWriterController : ControllerBase, IDisposable
     }
 
      [HttpPost]
-    public IActionResult PostData([FromBody] List<string> lineProtocolDataList, [FromQuery] string bucket, [FromQuery] string organization, [FromQuery] WritePrecision precision = WritePrecision.S)
+    public IActionResult PostData([FromBody] List<string> lineProtocolDataList, [FromQuery] string bucket, [FromQuery] string organization, [FromQuery] string precision = "s")
     {
         try
         {
