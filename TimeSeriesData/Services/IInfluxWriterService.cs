@@ -1,6 +1,6 @@
 using InfluxDB.Client.Api.Domain;
 
-public interface IInfluxWriterServices
+public interface IInfluxWriterService
 {
     void WriteData(
       List<string> lineProtocolDataList, 

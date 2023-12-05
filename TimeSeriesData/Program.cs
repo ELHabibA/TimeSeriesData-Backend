@@ -22,7 +22,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //builder.Services.AddScoped<IProductsService, ProductsService>();
-builder.Services.AddScoped<IInfluxWriterServices, InfluxWriterServices>();
+builder.Services.AddScoped<IInfluxWriterService, InfluxWriterService>();
+builder.Services.AddScoped<IInfluxFetcherService, InfluxFetcherService>();
 
 var app = builder.Build();
 
