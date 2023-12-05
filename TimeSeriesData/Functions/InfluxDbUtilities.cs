@@ -8,18 +8,7 @@ namespace Timeseriesdata.Functions
     public class InfluxDbUtilities
     {
 
-        public static string GetTimeRangeFilter(DateTime? startTime, DateTime? endTime)
-        {
-            if (startTime.HasValue && endTime.HasValue)
-            {
-                return $"|> range(start: {startTime.Value:yyyy-MM-ddTHH:mm:ss}Z, stop: {endTime.Value:yyyy-MM-ddTHH:mm:ss}Z)";
-            }
-            else
-            {
-                return "|> range(start: 0)";
-            }
-        }
-
+      
 
         public static DateTime? ParseTime(string timeString)
         {
@@ -31,7 +20,7 @@ namespace Timeseriesdata.Functions
 
             if (DateTime.TryParse(timeString, out var normalDateTime))
                 return normalDateTime;
-            
+
 
             if (timeString.StartsWith('-') && char.IsDigit(timeString[1]))
             {
@@ -53,10 +42,10 @@ namespace Timeseriesdata.Functions
                 if (timeString.EndsWith("m") && int.TryParse(timeString.Substring(1, timeString.Length - 2), out var minutes))
                     return DateTime.UtcNow.AddMinutes(-minutes);
 
-                 if (timeString.EndsWith("s") && int.TryParse(timeString.Substring(1, timeString.Length - 2), out var seconds))
-                 return DateTime.UtcNow.AddSeconds(-seconds);
+                if (timeString.EndsWith("s") && int.TryParse(timeString.Substring(1, timeString.Length - 2), out var seconds))
+                    return DateTime.UtcNow.AddSeconds(-seconds);
 
-                 // It can be extended for other time units.
+                // It can be extended for other time units.
             }
 
             throw new ArgumentException($"Invalid time format: {timeString}");

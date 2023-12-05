@@ -49,5 +49,8 @@ bin/
 obj/
 TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.dll
 TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.pdb
-TimeSeriesData.Tests/bin/Debug/net7.0/CoverletSourceRootsMapping
-*.editorconfig
+*.dll
+*.dll
+*.pdb
+TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.Tests.dll
+TimeSeriesData.Tests/bin/Debug/net7.0/TimeSeriesData.Tests.pdb
