@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class InfluxDataController : ControllerBase
+public class InfluxFetcherController : ControllerBase
 {
     private readonly IInfluxFetcherService _influxDataService;
 
-    public InfluxDataController(IInfluxFetcherService influxDataService)
+    public InfluxFetcherController(IInfluxFetcherService influxDataService)
     {
         _influxDataService = influxDataService ?? throw new ArgumentNullException(nameof(influxDataService));
     }
