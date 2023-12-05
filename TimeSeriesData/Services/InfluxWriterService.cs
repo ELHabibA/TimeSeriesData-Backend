@@ -13,7 +13,7 @@ public class InfluxWriterService : IInfluxWriterService, IDisposable
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public void WriteData(List<string> lineProtocolDataList, string bucket, string organization, string precision = "s")
+    public void WriteData(List<string> lineProtocolDataList, string bucket, string organization, WritePrecision precision = WritePrecision.S)
     {
 
         try
@@ -23,7 +23,7 @@ public class InfluxWriterService : IInfluxWriterService, IDisposable
               foreach (var lineProtocolData in lineProtocolDataList)
               {
                 // Write each line to InfluxDB
-                writeApi.WriteRecord($"{lineProtocolData}",  MapStringToWritePrecision(precision), bucket, organization);
+                writeApi.WriteRecord($"{lineProtocolData}", precision, bucket, organization);
                 
              }
             }
@@ -34,20 +34,7 @@ public class InfluxWriterService : IInfluxWriterService, IDisposable
             throw new Exception("Failed to insert data into InfluxDB.", ex);
         }
     }
-    private WritePrecision MapStringToWritePrecision(string precision)
-    {
-        switch (precision.ToLower())
-        {
-            case "ms":
-                return WritePrecision.Ms;
-            case "us":
-                return WritePrecision.Us;
-            case "ns":
-                return WritePrecision.Ns;
-            default:
-                return WritePrecision.S;
-        }
-    }
+
 
     public void Dispose()
     {

@@ -6,6 +6,6 @@ public interface IInfluxWriterService
       List<string> lineProtocolDataList, 
       string bucket, 
       string organization, 
-      string precision = "s");
+      WritePrecision precision = WritePrecision.S);
     
 }
