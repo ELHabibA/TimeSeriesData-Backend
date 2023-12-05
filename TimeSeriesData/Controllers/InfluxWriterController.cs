@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using InfluxDB.Client;
 
 
-
 [ApiController]
 [Route("api/[controller]")]
 public class InfluxWriterController : ControllerBase, IDisposable
@@ -21,20 +20,26 @@ public class InfluxWriterController : ControllerBase, IDisposable
      [HttpPost]
     public IActionResult PostData([FromBody] List<string> lineProtocolDataList, [FromQuery] string bucket, [FromQuery] string organization, [FromQuery] string precision = "s")
     {
+        _logger.LogInformation("Received request to insert data. Bucket: {Bucket}, Organization: {Organization}, Precision: {Precision}, Number of records: {Count}",
+            bucket, organization, precision, lineProtocolDataList.Count);
+
         try
         {
             _influxWriterService.WriteData(lineProtocolDataList, bucket, organization, precision);
+
+            _logger.LogInformation("Data insertion successful.");
+
             return Ok("Data inserted successfully");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error inserting data into InfluxDB");
+            _logger.LogError(ex, "Error inserting data into InfluxDB. Bucket: {Bucket}, Organization: {Organization}, Precision: {Precision}",
+                bucket, organization, precision);
             return StatusCode(500, "Internal Server Error");
         }
     }
 
-
-   public void Dispose()
+    public void Dispose()
     {
         _client?.Dispose();
     }
