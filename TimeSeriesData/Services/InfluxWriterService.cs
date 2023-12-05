@@ -2,12 +2,12 @@ using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
 
 
-public class InfluxWriterServices : IInfluxWriterServices, IDisposable
+public class InfluxWriterService : IInfluxWriterService, IDisposable
 {
     private readonly InfluxDBClient _client;
-    private readonly ILogger<InfluxWriterServices> _logger;
+    private readonly ILogger<InfluxWriterService> _logger;
 
-    public InfluxWriterServices(InfluxDBClient influxDbClient, ILogger<InfluxWriterServices> logger)
+    public InfluxWriterService(InfluxDBClient influxDbClient, ILogger<InfluxWriterService> logger)
     {
         _client = influxDbClient ?? throw new ArgumentNullException(nameof(influxDbClient));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
