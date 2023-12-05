@@ -34,18 +34,19 @@ public class InfluxFetcherService : IInfluxFetcherService
         if (!string.IsNullOrEmpty(measurement))
         {
             fluxQuery += $" |> filter(fn: (r) => r._measurement == \"{measurement}\")";
+
         }
 
         return fluxQuery;
     }
 
- private static long ToInfluxTimestamp(DateTime dateTime)
-        {
+    private static long ToInfluxTimestamp(DateTime dateTime)
+    {
             return dateTime.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks / 10000000;
-        }
+    }
 
-       private List<InfluxDataModel> ParseFluxTables(List<FluxTable> fluxTables)
-       {
+    private List<InfluxDataModel> ParseFluxTables(List<FluxTable> fluxTables)
+    {
           var result = new List<InfluxDataModel>();
 
           foreach (var fluxTable in fluxTables)
@@ -65,10 +66,10 @@ public class InfluxFetcherService : IInfluxFetcherService
          }
 
              return result;
-        }
+    }
 
-        private Dictionary<string, string> ExtractTags(FluxRecord fluxRecord)
-        {
+    private Dictionary<string, string> ExtractTags(FluxRecord fluxRecord)
+    {
          var tagDictionary = new Dictionary<string, string>();
 
           foreach (var keyValue in fluxRecord.Values)
@@ -82,10 +83,10 @@ public class InfluxFetcherService : IInfluxFetcherService
            }
 
            return tagDictionary;
-        }
+    }
 
-           private Dictionary<string, object> ExtractFields(FluxRecord fluxRecord)
-           {
+    private Dictionary<string, object> ExtractFields(FluxRecord fluxRecord)
+    {
            var fieldDictionary = new Dictionary<string, object>();
 
            foreach (var keyValue in fluxRecord.Values)
@@ -98,11 +99,11 @@ public class InfluxFetcherService : IInfluxFetcherService
            }
 
             return fieldDictionary;
-         }
+    }
 
-           private DateTime? ConvertInstantToDateTime(Instant? instant)
-          {
-                return instant?.InUtc().ToDateTimeUtc();
-          }   
+    private DateTime? ConvertInstantToDateTime(Instant? instant)
+    {
+        return instant?.InUtc().ToDateTimeUtc();
+    }   
           
 }
