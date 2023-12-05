@@ -63,31 +63,27 @@ using NodaTime;
         }
 
        private List<InfluxDataModel> ParseFluxTables(List<FluxTable> fluxTables)
-{
-    var result = new List<InfluxDataModel>();
+       {
+          var result = new List<InfluxDataModel>();
 
-    foreach (var fluxTable in fluxTables)
-    {
-        foreach (var fluxRecord in fluxTable.Records)
-        {
-          var  Tag = fluxRecord.Values
-        .Where(pair => pair.Value is Dictionary<string, string>)
-        .ToDictionary(pair => pair.Key, pair => ((Dictionary<string, string>)pair.Value).Values.FirstOrDefault());
-            var dataModel = new InfluxDataModel
+          foreach (var fluxTable in fluxTables)
+         {
+            foreach (var fluxRecord in fluxTable.Records)
             {
+               var dataModel = new InfluxDataModel
+              {
                 Measurement = fluxRecord.GetMeasurement(),
                 Fields = ExtractFields(fluxRecord),
-                Tags = Tag,
+                Tags = ExtractTags(fluxRecord),
                 Timestamp = ConvertInstantToDateTime(fluxRecord.GetTime()),
-                //RawRecord = GetRawRecordString(fluxRecord)
-            };
+             };
 
             result.Add(dataModel);
-        }
-    }
+           }
+         }
 
-    return result;
-}
+             return result;
+        }
 
         private Dictionary<string, string> ExtractTags(FluxRecord fluxRecord)
         {
@@ -98,8 +94,9 @@ using NodaTime;
              var key = keyValue.Key;
              var value = keyValue.Value;
 
-            //tagDictionary[key];
-
+            if(key!="result" && key!="table" && key!="_start" && key!="_stop" && key!="_time" && key!="_value" && key!="_field" && key!="_measurement" ){
+            tagDictionary[key] = (string) value;
+            }
            }
 
            return tagDictionary;
