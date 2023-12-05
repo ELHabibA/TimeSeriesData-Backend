@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using InfluxDB.Client;
-using InfluxDB.Client.Api.Domain;
+
 
 [ApiController]
 [Route("api/[controller]")]
@@ -17,8 +17,8 @@ public class InfluxWriterController : ControllerBase, IDisposable
         _client = influxDbClient ?? throw new ArgumentNullException(nameof(influxDbClient));
     }
 
-    [HttpPost]
-    public IActionResult PostData([FromBody] List<string> lineProtocolDataList, [FromQuery] string bucket, [FromQuery] string organization, [FromQuery] WritePrecision precision = WritePrecision.S)
+     [HttpPost]
+    public IActionResult PostData([FromBody] List<string> lineProtocolDataList, [FromQuery] string bucket, [FromQuery] string organization, [FromQuery] string precision = "s")
     {
         _logger.LogInformation("Received request to insert data. Bucket: {Bucket}, Organization: {Organization}, Precision: {Precision}, Number of records: {Count}",
             bucket, organization, precision, lineProtocolDataList.Count);
