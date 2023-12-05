@@ -7,11 +7,11 @@ using InfluxDB.Client.Api.Domain;
 [Route("api/[controller]")]
 public class InfluxWriterController : ControllerBase, IDisposable
 {
-    private readonly IInfluxWriterServices _influxWriterService;
+    private readonly IInfluxWriterService _influxWriterService;
     private readonly ILogger<InfluxWriterController> _logger;
     private readonly InfluxDBClient _client;
 
-    public InfluxWriterController(IInfluxWriterServices writerService, ILogger<InfluxWriterController> logger, InfluxDBClient influxDbClient)
+    public InfluxWriterController(IInfluxWriterService writerService, ILogger<InfluxWriterController> logger, InfluxDBClient influxDbClient)
     {
         _influxWriterService = writerService ?? throw new ArgumentNullException(nameof(writerService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
