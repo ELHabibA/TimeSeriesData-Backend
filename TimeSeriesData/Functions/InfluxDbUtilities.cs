@@ -8,6 +8,8 @@ namespace Timeseriesdata.Functions
     public class InfluxDbUtilities
     {
 
+      
+
         public static DateTime? ParseTime(string timeString)
         {
             if (string.IsNullOrEmpty(timeString))
@@ -18,7 +20,7 @@ namespace Timeseriesdata.Functions
 
             if (DateTime.TryParse(timeString, out var normalDateTime))
                 return normalDateTime;
-            
+
 
             if (timeString.StartsWith('-') && char.IsDigit(timeString[1]))
             {
@@ -40,10 +42,10 @@ namespace Timeseriesdata.Functions
                 if (timeString.EndsWith("m") && int.TryParse(timeString.Substring(1, timeString.Length - 2), out var minutes))
                     return DateTime.UtcNow.AddMinutes(-minutes);
 
-                 if (timeString.EndsWith("s") && int.TryParse(timeString.Substring(1, timeString.Length - 2), out var seconds))
-                 return DateTime.UtcNow.AddSeconds(-seconds);
+                if (timeString.EndsWith("s") && int.TryParse(timeString.Substring(1, timeString.Length - 2), out var seconds))
+                    return DateTime.UtcNow.AddSeconds(-seconds);
 
-                 // It can be extended for other time units.
+                // It can be extended for other time units.
             }
 
             throw new ArgumentException($"Invalid time format: {timeString}");
