@@ -29,7 +29,8 @@ public class InfluxFetcherService : IInfluxFetcherService
     public static string BuildFluxQuery(string bucket, string measurement, DateTime startTime, DateTime? endTime)
     {
         // If endTime is not provided, set it to "now"
-        string endTimeString = endTime.HasValue ? InfluxDbUtilities.ToInfluxTimestamp(endTime.Value).ToString() : "now()";
+        if(!endTime.HasValue)
+              endTime = DateTime.UtcNow;
 
       var fluxQuery = $@"
         from(bucket: ""{bucket}"")
@@ -51,8 +52,8 @@ public class InfluxFetcherService : IInfluxFetcherService
                var dataModel = new InfluxDataModel
               {
                 Measurement = fluxRecord.GetMeasurement(),
-                Fields = ExtractFields(fluxRecord),
                 Tags = ExtractTags(fluxRecord),
+                Fields = ExtractFields(fluxRecord),
                 Timestamp = InfluxDbUtilities.ConvertInstantToDateTime(fluxRecord.GetTime()),
              };
 
