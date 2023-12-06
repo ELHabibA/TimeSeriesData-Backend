@@ -25,30 +25,34 @@ public class InfluxFetcherService : IInfluxFetcherService
         return ParseFluxTables(fluxTables);
     }
 
-    private static string BuildFluxQuery(string bucket, string measurement, DateTime startTime, DateTime? endTime)
+    public static string BuildFluxQuery(string bucket, string measurement, DateTime startTime, DateTime? endTime)
     {
         // If endTime is not provided, set it to "now"
         string endTimeString = endTime.HasValue ? ToInfluxTimestamp(endTime.Value).ToString() : "now()";
 
         var fluxQuery = $@"
         from(bucket: ""{bucket}"")
-            |> range(start: {ToInfluxTimestamp(startTime)}, stop: {endTimeString})";
-
-        // If measurement is provided, add a filter for it
-        if (!string.IsNullOrEmpty(measurement))
-        {
-            fluxQuery += $" |> filter(fn: (r) => r._measurement == \"{measurement}\")";
-        }
+        |> range(start: {ToInfluxTimestamp(startTime)}, stop: {ToInfluxTimestamp(endTime)}) 
+        |> filter(fn: (r) => r._measurement == ""{measurement}"")";
 
         return fluxQuery;
+
+      
     }
 
-    private static long ToInfluxTimestamp(DateTime dateTime)
+    private static long ToInfluxTimestamp(DateTime? dateTime)
+    {
+        if (dateTime.HasValue)
         {
-            return dateTime.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks / 10000000;
+            return dateTime.Value.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks / 10000000;
         }
+        else
+        {
+            throw new ArgumentNullException(nameof(dateTime));
+        }
+    }
 
-       private List<InfluxDataModel> ParseFluxTables(List<FluxTable> fluxTables)
+    private List<InfluxDataModel> ParseFluxTables(List<FluxTable> fluxTables)
        {
           var result = new List<InfluxDataModel>();
 
@@ -104,9 +108,9 @@ public class InfluxFetcherService : IInfluxFetcherService
             return fieldDictionary;
          }
 
-           private DateTime? ConvertInstantToDateTime(Instant? instant)
-          {
-                return instant?.InUtc().ToDateTimeUtc();
-          }   
-          
+            public DateTime? ConvertInstantToDateTime(Instant? instant)
+            {
+            return instant?.InUtc().ToDateTimeUtc();
+            }
+
 }

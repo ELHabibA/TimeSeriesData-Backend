@@ -8,7 +8,7 @@ namespace Timeseriesdata.Functions
     public class InfluxDbUtilities
     {
 
-      
+
 
         public static DateTime? ParseTime(string timeString)
         {

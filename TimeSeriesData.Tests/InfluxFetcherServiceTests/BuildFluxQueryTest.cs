@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using System.Text.RegularExpressions;
+using Xunit;
 
 namespace TimeSeriesData.Tests.InfluxFetcherServiceTests
 {
@@ -17,22 +14,20 @@ namespace TimeSeriesData.Tests.InfluxFetcherServiceTests
             var measurement = "testMeasurement";
             var startTime = new DateTime(2022, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var endTime = new DateTime(2022, 1, 2, 0, 0, 0, DateTimeKind.Utc);
-            var expectedQuery = @"
-        from(bucket: ""testBucket"")
-        |> range(start: 1609459200, stop: 1609545600) |> filter(fn: (r) => r._measurement == ""testMeasurement"")";
+            long startUnixTime = ((DateTimeOffset)startTime).ToUnixTimeSeconds();
+            long endUnixTime = ((DateTimeOffset)endTime).ToUnixTimeSeconds();
+            var coco = InfluxFetcherService.BuildFluxQuery(bucket, measurement, startTime, endTime);
 
-            // Act
-            var result = FluxQuery(bucket, measurement, startTime, endTime);
+            var expectedQuery = $@"from(bucket: ""{bucket}"")
+            |> range(start: {startUnixTime}, stop: {endUnixTime})
+            |> filter(fn: (r) => r._measurement == ""{measurement}"")";
+
+            // Normalize whitespace in expectedQuery and coco
+            var expectedNormalized = Regex.Replace(expectedQuery.Trim(), @"\s+", " ");
+            var actualNormalized = Regex.Replace(coco.Trim(), @"\s+", " ");
 
             // Assert
-            Assert.Equal(expectedQuery.Trim(), result.Trim());
-        }
-
-        private static string FluxQuery(string bucket, string measurement, DateTime startTime, DateTime? endTime)
-        {
-            return @"
-        from(bucket: ""testBucket"")
-        |> range(start: 1609459200, stop: 1609545600) |> filter(fn: (r) => r._measurement == ""testMeasurement"")";
+            Assert.Equal(expectedNormalized, actualNormalized, StringComparer.OrdinalIgnoreCase);
         }
     }
 }
