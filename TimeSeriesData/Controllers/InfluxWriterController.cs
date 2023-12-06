@@ -1,20 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
-using InfluxDB.Client;
 
 
 [ApiController]
 [Route("api/[controller]")]
-public class InfluxWriterController : ControllerBase, IDisposable
+public class InfluxWriterController : ControllerBase
 {
     private readonly IInfluxWriterService _influxWriterService;
     private readonly ILogger<InfluxWriterController> _logger;
-    private readonly InfluxDBClient _client;
+   
 
-    public InfluxWriterController(IInfluxWriterService writerService, ILogger<InfluxWriterController> logger, InfluxDBClient influxDbClient)
+    public InfluxWriterController(IInfluxWriterService writerService, ILogger<InfluxWriterController> logger)
     {
         _influxWriterService = writerService ?? throw new ArgumentNullException(nameof(writerService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _client = influxDbClient ?? throw new ArgumentNullException(nameof(influxDbClient));
     }
 
      [HttpPost]
@@ -37,10 +35,5 @@ public class InfluxWriterController : ControllerBase, IDisposable
                 bucket, organization, precision);
             return StatusCode(500, "Internal Server Error");
         }
-    }
-
-    public void Dispose()
-    {
-        _client?.Dispose();
     }
 }
