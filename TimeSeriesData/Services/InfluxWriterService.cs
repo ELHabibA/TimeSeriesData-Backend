@@ -34,7 +34,7 @@ public class InfluxWriterService : IInfluxWriterService, IDisposable
             throw new Exception("Failed to insert data into InfluxDB.", ex);
         }
     }
-    private WritePrecision MapStringToWritePrecision(string precision)
+    public static WritePrecision MapStringToWritePrecision(string precision)
     {
         switch (precision.ToLower())
         {

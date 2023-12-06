@@ -1,7 +1,8 @@
 using InfluxDB.Client;
 using InfluxDB.Client.Core.Flux.Domain;
 using Timeseriesdata.Models;
-using NodaTime;
+using Timeseriesdata.Functions;
+
 
 
 
@@ -25,28 +26,19 @@ public class InfluxFetcherService : IInfluxFetcherService
         return ParseFluxTables(fluxTables);
     }
 
-    private static string BuildFluxQuery(string bucket, string measurement, DateTime startTime, DateTime? endTime)
+    public static string BuildFluxQuery(string bucket, string measurement, DateTime startTime, DateTime? endTime)
     {
         // If endTime is not provided, set it to "now"
-        string endTimeString = endTime.HasValue ? ToInfluxTimestamp(endTime.Value).ToString() : "now()";
+        string endTimeString = endTime.HasValue ? InfluxDbUtilities.ToInfluxTimestamp(endTime.Value).ToString() : "now()";
 
-        var fluxQuery = $@"
+      var fluxQuery = $@"
         from(bucket: ""{bucket}"")
-            |> range(start: {ToInfluxTimestamp(startTime)}, stop: {endTimeString})";
-
-        // If measurement is provided, add a filter for it
-        if (!string.IsNullOrEmpty(measurement))
-        {
-            fluxQuery += $" |> filter(fn: (r) => r._measurement == \"{measurement}\")";
-        }
+        |> range(start: {InfluxDbUtilities.ToInfluxTimestamp(startTime)}, stop: {InfluxDbUtilities.ToInfluxTimestamp(endTime)})
+        |> filter(fn: (r) => r._measurement == ""{measurement}"")";
 
         return fluxQuery;
     }
 
-    private static long ToInfluxTimestamp(DateTime dateTime)
-        {
-            return dateTime.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks / 10000000;
-        }
 
        private List<InfluxDataModel> ParseFluxTables(List<FluxTable> fluxTables)
        {
@@ -61,7 +53,7 @@ public class InfluxFetcherService : IInfluxFetcherService
                 Measurement = fluxRecord.GetMeasurement(),
                 Fields = ExtractFields(fluxRecord),
                 Tags = ExtractTags(fluxRecord),
-                Timestamp = ConvertInstantToDateTime(fluxRecord.GetTime()),
+                Timestamp = InfluxDbUtilities.ConvertInstantToDateTime(fluxRecord.GetTime()),
              };
 
             result.Add(dataModel);
@@ -88,25 +80,20 @@ public class InfluxFetcherService : IInfluxFetcherService
            return tagDictionary;
         }
 
-           private Dictionary<string, object> ExtractFields(FluxRecord fluxRecord)
-           {
-           var fieldDictionary = new Dictionary<string, object>();
+        private Dictionary<string, object> ExtractFields(FluxRecord fluxRecord)
+        {
+        var fieldDictionary = new Dictionary<string, object>();
 
-           foreach (var keyValue in fluxRecord.Values)
-           {
-            var key = fluxRecord.GetField();
-            var value = fluxRecord.GetValue();
+        foreach (var keyValue in fluxRecord.Values)
+        {
+        var key = fluxRecord.GetField();
+        var value = fluxRecord.GetValue();
 
-            fieldDictionary[key] = value;
+        fieldDictionary[key] = value;
 
-           }
+        }
 
-            return fieldDictionary;
-         }
-
-           private DateTime? ConvertInstantToDateTime(Instant? instant)
-          {
-                return instant?.InUtc().ToDateTimeUtc();
-          }   
-          
+        return fieldDictionary;
+        }
+        
 }
