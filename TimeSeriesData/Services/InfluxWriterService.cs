@@ -2,15 +2,14 @@ using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
 
 
-public class InfluxWriterService : IInfluxWriterService, IDisposable
+public class InfluxWriterService : IInfluxWriterService
 {
     private readonly InfluxDBClient _client;
-    private readonly ILogger<InfluxWriterService> _logger;
 
-    public InfluxWriterService(InfluxDBClient influxDbClient, ILogger<InfluxWriterService> logger)
+    public InfluxWriterService(InfluxDBClient influxDbClient)
     {
         _client = influxDbClient ?? throw new ArgumentNullException(nameof(influxDbClient));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    
     }
 
     public void WriteData(List<string> lineProtocolDataList, string bucket, string organization, string precision = "s")
@@ -34,7 +33,7 @@ public class InfluxWriterService : IInfluxWriterService, IDisposable
             throw new Exception("Failed to insert data into InfluxDB.", ex);
         }
     }
-    private WritePrecision MapStringToWritePrecision(string precision)
+    public static WritePrecision MapStringToWritePrecision(string precision)
     {
         switch (precision.ToLower())
         {
@@ -49,8 +48,4 @@ public class InfluxWriterService : IInfluxWriterService, IDisposable
         }
     }
 
-    public void Dispose()
-    {
-        _client?.Dispose();
-    }
 }
