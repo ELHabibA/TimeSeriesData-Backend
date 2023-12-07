@@ -1,26 +1,10 @@
-
-using InfluxDB.Client.Core.Flux.Domain;
-using Timeseriesdata.Models;
+using NodaTime;
 
 namespace Timeseriesdata.Functions
 {
 
     public class InfluxDbUtilities
     {
-
-        public static string GetTimeRangeFilter(DateTime? startTime, DateTime? endTime)
-        {
-            if (startTime.HasValue && endTime.HasValue)
-            {
-                return $"|> range(start: {startTime.Value:yyyy-MM-ddTHH:mm:ss}Z, stop: {endTime.Value:yyyy-MM-ddTHH:mm:ss}Z)";
-            }
-            else
-            {
-                return "|> range(start: 0)";
-            }
-        }
-
-
         public static DateTime? ParseTime(string timeString)
         {
             if (string.IsNullOrEmpty(timeString))
@@ -31,7 +15,7 @@ namespace Timeseriesdata.Functions
 
             if (DateTime.TryParse(timeString, out var normalDateTime))
                 return normalDateTime;
-            
+
 
             if (timeString.StartsWith('-') && char.IsDigit(timeString[1]))
             {
@@ -39,7 +23,9 @@ namespace Timeseriesdata.Functions
                     return DateTime.UtcNow.AddDays(-weeks * 7);
 
                 if (timeString.EndsWith("M") && int.TryParse(timeString.Substring(1, timeString.Length - 2), out var months))
-                    return DateTime.UtcNow.AddMonths(-months);
+                {
+                    return AdjustMonths(DateTime.UtcNow, -months);
+                }
 
                 if (timeString.EndsWith("y") && int.TryParse(timeString.Substring(1, timeString.Length - 2), out var years))
                     return DateTime.UtcNow.AddYears(-years);
@@ -53,15 +39,47 @@ namespace Timeseriesdata.Functions
                 if (timeString.EndsWith("m") && int.TryParse(timeString.Substring(1, timeString.Length - 2), out var minutes))
                     return DateTime.UtcNow.AddMinutes(-minutes);
 
-                 if (timeString.EndsWith("s") && int.TryParse(timeString.Substring(1, timeString.Length - 2), out var seconds))
-                 return DateTime.UtcNow.AddSeconds(-seconds);
+                if (timeString.EndsWith("s") && int.TryParse(timeString.Substring(1, timeString.Length - 2), out var seconds))
+                    return DateTime.UtcNow.AddSeconds(-seconds);
 
-                 // It can be extended for other time units.
+                // It can be extended for other time units.
             }
 
             throw new ArgumentException($"Invalid time format: {timeString}");
         }
 
-    }
+        public static DateTime AdjustMonths(DateTime dateTime, int months)
+        {
+            // Ensure months is within a reasonable range
+            if (months > 0)
+                return dateTime.AddMonths(months);
 
+            // Going back in months while preserving day of the month
+            int year = dateTime.Year;
+            int month = dateTime.Month + months;
+
+            while (month <= 0)
+            {
+                month += 12;
+                year--;
+            }
+
+            int daysInMonth = DateTime.DaysInMonth(year, month);
+            int day = Math.Min(dateTime.Day, daysInMonth);
+
+            return new DateTime(year, month, day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
+        }
+
+         public static DateTime? ConvertInstantToDateTime(Instant? instant)
+         {
+                return instant?.InUtc().ToDateTimeUtc();
+         }   
+
+        public static long ToInfluxTimestamp(DateTime? dateTime)
+        {
+            return (dateTime ?? DateTime.MinValue).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks / 10000000;
+        }
+
+
+    }
 }
