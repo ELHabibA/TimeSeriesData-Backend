@@ -1,4 +1,3 @@
-using InfluxDB.Client.Api.Domain;
 
 public interface IInfluxWriterService
 {
