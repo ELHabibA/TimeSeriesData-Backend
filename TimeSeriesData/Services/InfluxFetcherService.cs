@@ -3,9 +3,6 @@ using InfluxDB.Client.Core.Flux.Domain;
 using Timeseriesdata.Models;
 using Timeseriesdata.Functions;
 
-
-
-
 public class InfluxFetcherService : IInfluxFetcherService
 {
     private readonly InfluxDBClient _influxDBClient;
