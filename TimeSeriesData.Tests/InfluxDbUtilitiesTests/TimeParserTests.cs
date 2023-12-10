@@ -1,18 +1,28 @@
 using Timeseriesdata.Functions;
 
-public class TimeParserTests
+public class TimeParserTests : IDisposable
 {
-    [Fact]
+    private DateTime? result;
+    private string? input;
+
+    public TimeParserTests()
+    {
+        result = InfluxDbUtilities.ParseTime(input!);
+    }
+
+    public void Dispose(){
+
+    }
+
+   
+   [Fact]
     public void ParseTime_ReturnsNull_WhenInputIsNullOrEmpty()
     {
         // Arrange
-        string nullOrEmptyString = null!;
+        input = null!;
 
-        // Act
-        var result = InfluxDbUtilities.ParseTime(nullOrEmptyString);
-
-        // Assert
-        Assert.Null(result);
+        // Act & Assert
+        Assert.Null(InfluxDbUtilities.ParseTime(input));
     }
 
 
@@ -23,12 +33,12 @@ public class TimeParserTests
     public void ParseTime_ReturnsUtc_WhenInputIsNow(string input)
     {
         // Act
-        var result = InfluxDbUtilities.ParseTime(input);
+        result = InfluxDbUtilities.ParseTime(input);
 
         // Assert
         Assert.NotNull(result);
         Assert.IsType<DateTime>(result);
-      }
+    }
 
 
     [Theory]
@@ -39,7 +49,7 @@ public class TimeParserTests
     {
         // Arrange & Act
         DateTime currentUtcDateTime = DateTime.UtcNow;
-        var result = InfluxDbUtilities.ParseTime(input);
+        result = InfluxDbUtilities.ParseTime(input);
 
         // Round milliseconds to zero
         currentUtcDateTime = currentUtcDateTime.AddTicks(-currentUtcDateTime.Ticks % TimeSpan.TicksPerSecond);
@@ -57,7 +67,7 @@ public class TimeParserTests
     public void ParseTime_ReturnsDateTime_WhenInputIsAValidDateTime(string input)
     {
         // Act
-        var result = InfluxDbUtilities.ParseTime(input);
+        result = InfluxDbUtilities.ParseTime(input);
 
         // Assert
         Assert.NotNull(result);
@@ -73,7 +83,7 @@ public class TimeParserTests
     public void ParseTime_ReturnsDateTimeAgo_WhenInputIsTimeAgo(string input, int expectedAmount)
     {
         // Act
-        var result = InfluxDbUtilities.ParseTime(input);
+        result = InfluxDbUtilities.ParseTime(input);
 
         // Assert
         Assert.NotNull(result);
@@ -95,7 +105,7 @@ public class TimeParserTests
     public void ParseTime_ReturnsDateTimeAgo_WhenInputIsTimeAgoInMinutes(string input, int expectedAmount)
     {
         // Act
-        var result = InfluxDbUtilities.ParseTime(input);
+        result = InfluxDbUtilities.ParseTime(input);
 
         // Assert
         Assert.NotNull(result);
@@ -128,7 +138,7 @@ public class TimeParserTests
     public void ParseTime_ReturnsDateTimeAgo_WhenInputIsTimeAgoInSeconds(string input, int expectedAmount)
     {
         // Act
-        var result = InfluxDbUtilities.ParseTime(input);
+        result = InfluxDbUtilities.ParseTime(input);
 
         // Assert
         Assert.NotNull(result);
@@ -161,7 +171,7 @@ public class TimeParserTests
     public void ParseTime_ReturnsDateTimeAgo_WhenInputIsTimeAgoInYears(string input, int expectedAmount)
     {
         // Act
-        var result = InfluxDbUtilities.ParseTime(input);
+        result = InfluxDbUtilities.ParseTime(input);
 
         // Assert
         Assert.NotNull(result);
@@ -195,7 +205,7 @@ public class TimeParserTests
     public void ParseTime_ReturnsDateTimeAgo_WhenInputIsTimeInMonths(string input, int expectedAmount)
     {
         // Act
-        var result = InfluxDbUtilities.ParseTime(input);
+        result = InfluxDbUtilities.ParseTime(input);
 
         // Assert
         Assert.NotNull(result);
@@ -242,9 +252,9 @@ public class TimeParserTests
     public void ParseTime_ThrowsArgumentException_WhenInputIsInvalid()
     {
         // Arrange
-        string invalidInput = "invalid";
+        input = "invalid";
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => InfluxDbUtilities.ParseTime(invalidInput));
+        Assert.Throws<ArgumentException>(() => InfluxDbUtilities.ParseTime(input));
     } 
 }
