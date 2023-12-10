@@ -28,10 +28,5 @@ public class InfluxFetcherServiceTests
         // Assert
         Assert.Equal(expectedNormalized, actualNormalized, StringComparer.OrdinalIgnoreCase);
     }
-
-
-
-
-
     
 }
