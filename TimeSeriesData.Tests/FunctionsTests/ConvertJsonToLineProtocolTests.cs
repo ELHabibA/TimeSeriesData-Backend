@@ -38,12 +38,12 @@ public void ConvertToLineProtocol_ValidData_ReturnsExpectedList()
 }
 
 
-private List<InfluxDataModel> GetDummyData()
+private List<InfluxDataModelForCreationDto> GetDummyData()
 {
         // Replace this with your actual dummy data
-        return new List<InfluxDataModel>
+        return new List<InfluxDataModelForCreationDto>
         {
-            new InfluxDataModel
+            new InfluxDataModelForCreationDto
             {
                 Measurement = "products_sales",
                 Fields = new Dictionary<string, object>
@@ -57,7 +57,7 @@ private List<InfluxDataModel> GetDummyData()
                 
             },
 
-            new InfluxDataModel
+            new InfluxDataModelForCreationDto
             {
                 Measurement = "products_sales",
                 Fields = new Dictionary<string, object>
@@ -70,7 +70,7 @@ private List<InfluxDataModel> GetDummyData()
                 },
                 Timestamp = DateTime.Parse("2023-12-07T11:48:58Z")
             },
-            new InfluxDataModel
+            new InfluxDataModelForCreationDto
             {
                 Measurement = "products_sales",
                 Fields = new Dictionary<string, object>

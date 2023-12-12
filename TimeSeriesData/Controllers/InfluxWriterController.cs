@@ -1,9 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Timeseriesdata.Functions;
 using Timeseriesdata.Models;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -22,13 +18,14 @@ public class InfluxWriterController : ControllerBase
      [HttpPost]
     public IActionResult PostData([FromBody] List<InfluxDataModelForCreationDto>  DataList, [FromQuery] string bucket, [FromQuery] string organization, [FromQuery] string precision = "s")
     {
-       // _logger.LogInformation("Received request to insert data. Bucket: {Bucket}, Organization: {Organization}, Precision: {Precision}, Number of records: {Count}",
-       //     bucket, organization, precision, lineProtocolDataList.Count);
+        
 
         try
         {
 
              var lineProtocolDataList = JsonToLineProtocolConverter.ConvertToLineProtocol(DataList);
+
+             _logger.LogInformation($"Received request to insert data. Bucket: {bucket}, Organization: {organization}, Precision: {precision}, Number of records: {lineProtocolDataList.Count}");
 
             _influxWriterService.WriteData(lineProtocolDataList, bucket, organization, precision);
 
