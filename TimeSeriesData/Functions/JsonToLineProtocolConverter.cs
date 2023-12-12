@@ -5,7 +5,7 @@ using Timeseriesdata.Functions;
 
 public class JsonToLineProtocolConverter
 {
-    public static List<string> ConvertToLineProtocol(List<InfluxDataModel> influxDataList)
+    public static List<string> ConvertToLineProtocol(List<InfluxDataModelForCreationDto> influxDataList)
     {
         try
         {
@@ -36,7 +36,7 @@ public class JsonToLineProtocolConverter
         }
     }
 
-    private static string ExtractFields(InfluxDataModel influxData)
+    private static string ExtractFields(InfluxDataModelForCreationDto influxData)
     {
         var fields = new List<string>();
 
@@ -51,7 +51,7 @@ public class JsonToLineProtocolConverter
         return string.Join(",", fields);
     }
 
-    private static string ExtractTags(InfluxDataModel influxData)
+    private static string ExtractTags(InfluxDataModelForCreationDto influxData)
     {
         var tags = new List<string>();
 
