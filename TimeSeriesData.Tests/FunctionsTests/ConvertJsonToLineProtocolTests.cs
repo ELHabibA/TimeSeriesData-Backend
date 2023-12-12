@@ -1,18 +1,18 @@
-using System;
-using Xunit;
+
 using Timeseriesdata.Models;
 
 
 public class JsonToLineProtocolConverterTests
 {
-    [Fact]
+
+[Fact]
 public void ConvertToLineProtocol_ValidData_ReturnsExpectedList()
 {
     // Arrange
     var influxDataList = GetDummyData();
     List<string> expectedList = new List<string>(new string[]
     {
-       "products_sales,product_name=7up units_sold=20 1701939477",
+       "products_sales,product_name=7up units_sold=20",
        "products_sales,product_name=Nocco units_sold=30 1701949738",
        "products_sales,product_name=Fanta units_sold=40 1701939477"
     });
@@ -38,8 +38,8 @@ public void ConvertToLineProtocol_ValidData_ReturnsExpectedList()
 }
 
 
-    private List<InfluxDataModel> GetDummyData()
-    {
+private List<InfluxDataModel> GetDummyData()
+{
         // Replace this with your actual dummy data
         return new List<InfluxDataModel>
         {
@@ -53,9 +53,10 @@ public void ConvertToLineProtocol_ValidData_ReturnsExpectedList()
                 Tags = new Dictionary<string, string>
                 {
                     { "product_name", "7up" }
-                },
-                Timestamp = DateTime.Parse("2023-12-07T08:57:57Z")
+                }
+                
             },
+
             new InfluxDataModel
             {
                 Measurement = "products_sales",
@@ -83,7 +84,7 @@ public void ConvertToLineProtocol_ValidData_ReturnsExpectedList()
                 Timestamp = DateTime.Parse("2023-12-07T08:57:57Z")
             }
         };
-    }
+}
 }
 
 
