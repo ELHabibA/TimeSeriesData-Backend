@@ -2,7 +2,7 @@
 using Timeseriesdata.Models;
 
 
-public class JsonToLineProtocolConverterTests
+public class ToLineProtocolConverterTests
 {
 
 [Fact]
@@ -18,7 +18,7 @@ public void ConvertToLineProtocol_ValidData_ReturnsExpectedList()
     });
 
     // Act
-    var result = JsonToLineProtocolConverter.ConvertToLineProtocol(influxDataList);
+    var result = ToLineProtocolConverter.ConvertToLineProtocol(influxDataList);
 
     // Output for inspection
     Console.WriteLine("Expected:");

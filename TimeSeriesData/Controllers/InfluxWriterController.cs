@@ -23,7 +23,7 @@ public class InfluxWriterController : ControllerBase
         try
         {
 
-             var lineProtocolDataList = JsonToLineProtocolConverter.ConvertToLineProtocol(DataList);
+             var lineProtocolDataList = ToLineProtocolConverter.ConvertToLineProtocol(DataList);
 
              _logger.LogInformation($"Received request to insert data. Bucket: {bucket}, Organization: {organization}, Precision: {precision}, Number of records: {lineProtocolDataList.Count}");
 
