@@ -1,7 +1,7 @@
 using Timeseriesdata.Models;
 using Timeseriesdata.Functions;
 
-public class JsonToLineProtocolConverter
+public class ToLineProtocolConverter
 {
     public static List<string> ConvertToLineProtocol(List<InfluxDataModelForCreationDto> influxDataList)
     {
