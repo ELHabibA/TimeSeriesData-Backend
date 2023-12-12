@@ -1,88 +1,89 @@
 using System;
 using Xunit;
+using Timeseriesdata.Models;
+
 
 public class JsonToLineProtocolConverterTests
 {
     [Fact]
-    public void ConvertJsonToLineProtocol_ValidData_ReturnsExpectedJsonArray()
+public void ConvertToLineProtocol_ValidData_ReturnsExpectedList()
+{
+    // Arrange
+    var influxDataList = GetDummyData();
+    List<string> expectedList = new List<string>(new string[]
     {
-        // Arrange
-        var converter = new JsonToLineProtocolConverter();
-        var jsonData = GetDummyData();
-        var expectedJsonArray = "[\n  \"products_sales,product_name=7up units_sold=201701935877\",\n  \"products_sales,product_name=7up units_sold=20 1701946138\",\n  \"products_sales,product_name=Fanta units_sold=10 1701935877\"\n]";
+       "products_sales,product_name=7up units_sold=20 1701939477",
+       "products_sales,product_name=Nocco units_sold=30 1701949738",
+       "products_sales,product_name=Fanta units_sold=40 1701939477"
+    });
 
-        // Act
-        var result = converter.ConvertJsonToLineProtocol(jsonData);
+    // Act
+    var result = JsonToLineProtocolConverter.ConvertToLineProtocol(influxDataList);
 
-        // Assert
-        Assert.Equal(expectedJsonArray, result);
+    // Output for inspection
+    Console.WriteLine("Expected:");
+    foreach (var expected in expectedList)
+    {
+        Console.WriteLine(expected);
     }
 
-    private string GetDummyData()
+    Console.WriteLine("\nActual:");
+    foreach (var actual in result)
+    {
+        Console.WriteLine(actual);
+    }
+
+    // Assert
+    Assert.Equal(expectedList, result);
+}
+
+
+    private List<InfluxDataModel> GetDummyData()
     {
         // Replace this with your actual dummy data
-        return @"[
+        return new List<InfluxDataModel>
+        {
+            new InfluxDataModel
             {
-                ""measurement"": ""products_sales"",
-                ""fields"": {
-                    ""units_sold"": 20
+                Measurement = "products_sales",
+                Fields = new Dictionary<string, object>
+                {
+                    { "units_sold", 20 }
                 },
-                ""tags"": {
-                    ""product_name"": ""7up""
+                Tags = new Dictionary<string, string>
+                {
+                    { "product_name", "7up" }
                 },
-                ""timestamp"": ""2023-12-07T08:57:57Z""
+                Timestamp = DateTime.Parse("2023-12-07T08:57:57Z")
             },
+            new InfluxDataModel
             {
-                ""measurement"": ""products_sales"",
-                ""fields"": {
-                    ""units_sold"": 20
+                Measurement = "products_sales",
+                Fields = new Dictionary<string, object>
+                {
+                    { "units_sold", 30 }
                 },
-                ""tags"": {
-                    ""product_name"": ""7up""
+                Tags = new Dictionary<string, string>
+                {
+                    { "product_name", "Nocco" }
                 },
-                ""timestamp"": ""2023-12-07T11:48:58Z""
+                Timestamp = DateTime.Parse("2023-12-07T11:48:58Z")
             },
+            new InfluxDataModel
             {
-                ""measurement"": ""products_sales"",
-                ""fields"": {
-                    ""units_sold"": 10
+                Measurement = "products_sales",
+                Fields = new Dictionary<string, object>
+                {
+                    { "units_sold", 40 }
                 },
-                ""tags"": {
-                    ""product_name"": ""Fanta""
+                Tags = new Dictionary<string, string>
+                {
+                    { "product_name", "Fanta" }
                 },
-                ""timestamp"": ""2023-12-07T08:57:57Z""
-            },
-            {
-                ""measurement"": ""products_sales"",
-                ""fields"": {
-                    ""units_sold"": 10
-                },
-                ""tags"": {
-                    ""product_name"": ""Fanta""
-                },
-                ""timestamp"": ""2023-12-07T11:48:58Z""
-            },
-            {
-                ""measurement"": ""products_sales"",
-                ""fields"": {
-                    ""units_sold"": 15
-                },
-                ""tags"": {
-                    ""product_name"": ""Sprit""
-                },
-                ""timestamp"": ""2023-12-07T08:57:57Z""
-            },
-            {
-                ""measurement"": ""products_sales"",
-                ""fields"": {
-                    ""units_sold"": 15
-                },
-                ""tags"": {
-                    ""product_name"": ""Sprit""
-                },
-                ""timestamp"": ""2023-12-07T11:48:58Z""
+                Timestamp = DateTime.Parse("2023-12-07T08:57:57Z")
             }
-        ]";
+        };
     }
 }
+
 

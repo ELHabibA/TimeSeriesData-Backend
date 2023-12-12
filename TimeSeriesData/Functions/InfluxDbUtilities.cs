@@ -75,10 +75,19 @@ namespace Timeseriesdata.Functions
                 return instant?.InUtc().ToDateTimeUtc();
          }   
 
-        public static long ToInfluxTimestamp(DateTime? dateTime)
+    public static long ToInfluxTimestamp(DateTime? dateTime)
+    {
+        if (dateTime.HasValue)
         {
-            return (dateTime ?? DateTime.MinValue).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks / 10000000;
+            var utcDateTime = dateTime.Value.ToUniversalTime();
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var timestamp = (long)(utcDateTime - epoch).TotalSeconds;
+
+            return timestamp;
         }
+
+        return 0;
+    }
 
 
     }

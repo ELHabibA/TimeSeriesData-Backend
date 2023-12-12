@@ -1,138 +1,95 @@
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using Timeseriesdata.Models;
+using Timeseriesdata.Functions;
 
 public class JsonToLineProtocolConverter
 {
-     public string ConvertJsonToLineProtocol(string jsonText)
+    public static List<string> ConvertToLineProtocol(List<InfluxDataModel> influxDataList)
     {
         try
         {
-            var jsonArray = JArray.Parse(jsonText);
-
-            if (jsonArray == null)
-            {
-                throw new ArgumentException("Invalid JSON format");
-            }
-
             var lineProtocolList = new List<string>();
 
-            foreach (var item in jsonArray)
+            foreach (var influxData in influxDataList)
             {
-                var measurement = item.Value<string>("measurement");
-                var fields = ExtractFields(item);
-                var tags = ExtractTags(item);
-                var timestamp = item.Value<string>("timestamp");
+                var measurement = influxData.Measurement;
+                var fields = ExtractFields(influxData);
+                var tags = ExtractTags(influxData);
+                var timestamp = InfluxDbUtilities.ToInfluxTimestamp(influxData.Timestamp);
 
                 // Constructing the Line Protocol string
-                string lineProtocol = $"{measurement}{ConstructTagsString(tags)}{ConstructFieldsString(fields)} {GetTimestampString(timestamp)}";
+                string lineProtocol = $"{measurement}{ConstructTagsString(tags)}{ConstructFieldsString(fields)}";
+                if (timestamp != 0)
+                {
+                    lineProtocol += $" {GetTimestampString(timestamp.ToString())}";
+                }
                 lineProtocolList.Add(lineProtocol);
             }
 
-            // Convert the list to a JSON array string
-            var resultJsonArray = JArray.FromObject(lineProtocolList).ToString();
-
-            return resultJsonArray;
+            return lineProtocolList;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error converting JSON to Line Protocol: {ex.Message}");
+            Console.WriteLine($"Error converting InfluxDataModel to Line Protocol: {ex.Message}");
             return null;
         }
     }
 
-    private Dictionary<string, object> ExtractFields(JToken jsonObject)
+    private static string ExtractFields(InfluxDataModel influxData)
     {
-        var fields = new Dictionary<string, object>();
+        var fields = new List<string>();
 
-        foreach (var field in jsonObject["fields"].Children<JProperty>())
+        if (influxData.Fields != null)
         {
-            var fieldName = field.Name;
-            var fieldValue = field.Value;
-            if (fieldValue.Type == JTokenType.String || fieldValue.Type == JTokenType.Integer || fieldValue.Type == JTokenType.Float)
+            foreach (var field in influxData.Fields)
             {
-                fields.Add(fieldName, fieldValue);
+                fields.Add($"{field.Key}={EscapeFieldValue(field.Value)}");
             }
         }
 
-        return fields;
+        return string.Join(",", fields);
     }
 
-    private Dictionary<string, string> ExtractTags(JToken jsonObject)
+    private static string ExtractTags(InfluxDataModel influxData)
     {
-        var tags = new Dictionary<string, string>();
+        var tags = new List<string>();
 
-        foreach (var tag in jsonObject["tags"].Children<JProperty>())
+        if (influxData.Tags != null)
         {
-            var tagName = tag.Name;
-            var tagValue = tag.Value.ToString();
-            if (!string.IsNullOrWhiteSpace(tagValue))
+            foreach (var tag in influxData.Tags)
             {
-                tags.Add(tagName, tagValue);
+                tags.Add($"{tag.Key}={EscapeTagValue(tag.Value)}");
             }
         }
 
-        return tags;
+        return string.Join(",", tags);
     }
 
-    private string ConstructTagsString(Dictionary<string, string> tags)
+    private static string ConstructTagsString(string tags)
     {
-        if (tags.Count == 0)
-        {
-            return "";
-        }
-
-        var tagsString = new List<string>();
-        foreach (var tag in tags)
-        {
-            tagsString.Add($"{tag.Key}={EscapeTagValue(tag.Value)}");
-        }
-
-        return "," + string.Join(",", tagsString);
+        return string.IsNullOrWhiteSpace(tags) ? "" : $",{tags}";
     }
 
-    private string ConstructFieldsString(Dictionary<string, object> fields)
+    private static string ConstructFieldsString(string fields)
     {
-        if (fields.Count == 0)
-        {
-            return "";
-        }
-
-        var fieldsString = new List<string>();
-        foreach (var field in fields)
-        {
-            fieldsString.Add($"{field.Key}={EscapeFieldValue(field.Value)}");
-        }
-
-        return " " + string.Join(",", fieldsString);
+        return string.IsNullOrWhiteSpace(fields) ? "" : $" {fields}";
     }
 
-    private string EscapeTagValue(string value)
+    private static string EscapeTagValue(string value)
     {
         // Implement any necessary escaping logic here
         return value.Replace(",", "\\,");
     }
 
-    private string EscapeFieldValue(object value)
+    private static string EscapeFieldValue(object value)
     {
         // Implement any necessary escaping logic here
         return value.ToString();
     }
 
-    private string GetTimestampString(string timestamp)
+    private static string GetTimestampString(string timestamp)
     {
-        if (DateTime.TryParse(timestamp, out DateTime dateTime))
-        {
-            // Convert DateTime to Unix timestamp
-            long unixTimestamp = (long)(dateTime.ToUniversalTime() - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
-            return unixTimestamp.ToString();
-        }
-        else
-        {
-            Console.WriteLine("Invalid timestamp format");
-            return "";
-        }
+        return string.IsNullOrWhiteSpace(timestamp) ? "" : $"{timestamp}";
     }
 }
-
-
