@@ -29,7 +29,7 @@ public class ToLineProtocolConverter
         }
         catch (Exception ex)
         {
-            return null;
+            throw new Exception("Failed to Convert To Line Protocol.", ex);
         }
     }
 
