@@ -32,11 +32,23 @@ public class InfluxFetcherService : IInfluxFetcherService
 
       var fluxQuery = $@"
         from(bucket: ""{bucket}"")
+
         |> range(start: {InfluxDbUtilities.ToInfluxTimestamp(startTime)}, stop: {InfluxDbUtilities.ToInfluxTimestamp(endTime)})
+
+        |> range(start: {ToInfluxTimestamp(startTime)}, stop: {ToInfluxTimestamp(endTime)})
+
         |> filter(fn: (r) => r._measurement == ""{measurement}"")";
 
         return fluxQuery;
     }
+
+<
+
+        private static long ToInfluxTimestamp(DateTime? dateTime)
+        {
+            return (dateTime ?? DateTime.MinValue).ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks / 10000000;
+        }
+
 
 
        private List<InfluxDataModel> ParseFluxTables(List<FluxTable> fluxTables)
