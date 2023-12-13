@@ -1,7 +1,5 @@
 using InfluxDB.Client;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -23,6 +21,7 @@ builder.Services.AddSwaggerGen();
 // Our Services
 builder.Services.AddScoped<IInfluxWriterService, InfluxWriterService>();
 builder.Services.AddScoped<IInfluxFetcherService, InfluxFetcherService>();
+  
 
 var app = builder.Build();
 

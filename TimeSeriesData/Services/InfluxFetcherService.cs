@@ -38,8 +38,52 @@ public class InfluxFetcherService : IInfluxFetcherService
         return fluxQuery;
     }
 
+    public async Task<List<string>> GetTagsForMeasurementAsync(string organization, string bucket, string measurement)
+    {
+        var queryApi = _influxDBClient.GetQueryApi();
 
-       private List<InfluxDataModel> ParseFluxTables(List<FluxTable> fluxTables)
+        var fluxQuery = $@"
+        from(bucket: ""{bucket}"")
+        |> range(start: 0)
+        |> filter(fn: (r) => r._measurement == ""{measurement}"")
+        |> keys()
+    ";
+
+        var fluxTables = await queryApi.QueryAsync(fluxQuery, organization);
+
+        return ParseFluxTags(fluxTables);
+    }
+
+    private List<string> ParseFluxTags(List<FluxTable> fluxTables)
+    {
+        var result = new List<string>();
+
+        foreach (var fluxTable in fluxTables)
+        {
+            foreach (var fluxRecord in fluxTable.Records)
+            {
+                foreach (var keyValue in fluxRecord.Values)
+                {
+                    var key = keyValue.Key;
+
+                    // Check if the key is a tag key (not a reserved keyword)
+                    if (key != "_start" && key != "_stop" && key != "_time" && key != "_value" && key != "_field" && key != "_measurement")
+                    {
+                        result.Add(key);
+                    }
+                }
+            }
+        }
+
+        // Remove duplicate tag keys if needed
+        result = result.Distinct().ToList();
+
+        return result;
+    }
+
+
+
+    private List<InfluxDataModel> ParseFluxTables(List<FluxTable> fluxTables)
        {
           var result = new List<InfluxDataModel>();
 
