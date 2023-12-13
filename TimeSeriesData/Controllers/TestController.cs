@@ -28,8 +28,8 @@ public class InfluxTagController : ControllerBase
         {
             _logger.LogInformation($"Received request for tags with parameters: organization={organization}, bucket={bucket}, measurement={measurement}");
 
-            // Fetch tags for the given measurement using the existing InfluxFetcherService
-            var tags = await _influxFetcherService.GetTagsForMeasurementAsync(organization, bucket, measurement);
+            // Fetch tags for the given measurement using the new GetTagsAsync method
+            var tags = await _influxFetcherService.GetTagsAsync(organization, bucket, measurement);
 
             _logger.LogInformation("Request processed successfully.");
 
