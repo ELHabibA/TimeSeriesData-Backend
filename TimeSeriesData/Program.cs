@@ -1,9 +1,8 @@
 using InfluxDB.Client;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
-builder.Logging.ClearProviders();
-builder.Logging.AddConsole();
 
 
 var config = new ConfigurationBuilder()
@@ -21,7 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//Our Services
+// Our Services
 builder.Services.AddScoped<IInfluxWriterService, InfluxWriterService>();
 builder.Services.AddScoped<IInfluxFetcherService, InfluxFetcherService>();
 

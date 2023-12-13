@@ -1,4 +1,3 @@
-using InfluxDB.Client.Api.Domain;
 
 public interface IInfluxWriterService
 {
@@ -6,6 +5,6 @@ public interface IInfluxWriterService
       List<string> lineProtocolDataList, 
       string bucket, 
       string organization, 
-      WritePrecision precision = WritePrecision.S);
+      string precision = "s");
     
 }

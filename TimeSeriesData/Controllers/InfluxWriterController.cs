@@ -1,30 +1,32 @@
 using Microsoft.AspNetCore.Mvc;
-using InfluxDB.Client;
-using InfluxDB.Client.Api.Domain;
+using Timeseriesdata.Models;
 
 [ApiController]
 [Route("api/[controller]")]
-public class InfluxWriterController : ControllerBase, IDisposable
+public class InfluxWriterController : ControllerBase
 {
     private readonly IInfluxWriterService _influxWriterService;
     private readonly ILogger<InfluxWriterController> _logger;
-    private readonly InfluxDBClient _client;
+   
 
-    public InfluxWriterController(IInfluxWriterService writerService, ILogger<InfluxWriterController> logger, InfluxDBClient influxDbClient)
+    public InfluxWriterController(IInfluxWriterService writerService, ILogger<InfluxWriterController> logger)
     {
         _influxWriterService = writerService ?? throw new ArgumentNullException(nameof(writerService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _client = influxDbClient ?? throw new ArgumentNullException(nameof(influxDbClient));
     }
-
-    [HttpPost]
-    public IActionResult PostData([FromBody] List<string> lineProtocolDataList, [FromQuery] string bucket, [FromQuery] string organization, [FromQuery] WritePrecision precision = WritePrecision.S)
+ 
+     [HttpPost]
+    public IActionResult PostData([FromBody] List<InfluxDataModelForCreationDto>  DataList, [FromQuery] string bucket, [FromQuery] string organization, [FromQuery] string precision = "s")
     {
-        _logger.LogInformation("Received request to insert data. Bucket: {Bucket}, Organization: {Organization}, Precision: {Precision}, Number of records: {Count}",
-            bucket, organization, precision, lineProtocolDataList.Count);
+        
 
         try
         {
+
+             var lineProtocolDataList = ToLineProtocolConverter.ConvertToLineProtocol(DataList);
+
+             _logger.LogInformation($"Received request to insert data. Bucket: {bucket}, Organization: {organization}, Precision: {precision}, Number of records: {lineProtocolDataList.Count}");
+
             _influxWriterService.WriteData(lineProtocolDataList, bucket, organization, precision);
 
             _logger.LogInformation("Data insertion successful.");
@@ -37,10 +39,5 @@ public class InfluxWriterController : ControllerBase, IDisposable
                 bucket, organization, precision);
             return StatusCode(500, "Internal Server Error");
         }
-    }
-
-    public void Dispose()
-    {
-        _client?.Dispose();
     }
 }

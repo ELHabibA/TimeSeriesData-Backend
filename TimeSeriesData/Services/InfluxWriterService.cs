@@ -2,18 +2,17 @@ using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
 
 
-public class InfluxWriterService : IInfluxWriterService, IDisposable
+public class InfluxWriterService : IInfluxWriterService
 {
     private readonly InfluxDBClient _client;
-    private readonly ILogger<InfluxWriterService> _logger;
 
-    public InfluxWriterService(InfluxDBClient influxDbClient, ILogger<InfluxWriterService> logger)
+    public InfluxWriterService(InfluxDBClient influxDbClient)
     {
         _client = influxDbClient ?? throw new ArgumentNullException(nameof(influxDbClient));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    
     }
 
-    public void WriteData(List<string> lineProtocolDataList, string bucket, string organization, WritePrecision precision = WritePrecision.S)
+    public void WriteData(List<string> lineProtocolDataList, string bucket, string organization, string precision = "s")
     {
 
         try
@@ -23,7 +22,7 @@ public class InfluxWriterService : IInfluxWriterService, IDisposable
               foreach (var lineProtocolData in lineProtocolDataList)
               {
                 // Write each line to InfluxDB
-                writeApi.WriteRecord($"{lineProtocolData}", precision, bucket, organization);
+                writeApi.WriteRecord($"{lineProtocolData}",  MapStringToWritePrecision(precision), bucket, organization);
                 
              }
             }
@@ -34,10 +33,19 @@ public class InfluxWriterService : IInfluxWriterService, IDisposable
             throw new Exception("Failed to insert data into InfluxDB.", ex);
         }
     }
-
-
-    public void Dispose()
+    public static WritePrecision MapStringToWritePrecision(string precision)
     {
-        _client?.Dispose();
+        switch (precision.ToLower())
+        {
+            case "ms":
+                return WritePrecision.Ms;
+            case "us":
+                return WritePrecision.Us;
+            case "ns":
+                return WritePrecision.Ns;
+            default:
+                return WritePrecision.S;
+        }
     }
+
 }
