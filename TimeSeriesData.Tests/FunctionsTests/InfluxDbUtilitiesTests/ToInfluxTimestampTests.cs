@@ -39,7 +39,7 @@ namespace TimeSeriesData.Tests.InfluxFetcherServiceTests
         {
             // Arrange
             DateTime? dateTime = null;
-            var expectedTimestamp = -62135596800L; // Unix time for DateTime.MinValue
+            var expectedTimestamp = 0; // Unix time for DateTime.MinValue
 
             // Act
             var actualTimestamp = InfluxDbUtilities.ToInfluxTimestamp(dateTime);

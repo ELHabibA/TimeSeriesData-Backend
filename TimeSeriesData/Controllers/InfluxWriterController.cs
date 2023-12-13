@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-
+using Timeseriesdata.Models;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -14,15 +14,19 @@ public class InfluxWriterController : ControllerBase
         _influxWriterService = writerService ?? throw new ArgumentNullException(nameof(writerService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
-
+ 
      [HttpPost]
-    public IActionResult PostData([FromBody] List<string> lineProtocolDataList, [FromQuery] string bucket, [FromQuery] string organization, [FromQuery] string precision = "s")
+    public IActionResult PostData([FromBody] List<InfluxDataModelForCreationDto>  DataList, [FromQuery] string bucket, [FromQuery] string organization, [FromQuery] string precision = "s")
     {
-        _logger.LogInformation("Received request to insert data. Bucket: {Bucket}, Organization: {Organization}, Precision: {Precision}, Number of records: {Count}",
-            bucket, organization, precision, lineProtocolDataList.Count);
+        
 
         try
         {
+
+             var lineProtocolDataList = ToLineProtocolConverter.ConvertToLineProtocol(DataList);
+
+             _logger.LogInformation($"Received request to insert data. Bucket: {bucket}, Organization: {organization}, Precision: {precision}, Number of records: {lineProtocolDataList.Count}");
+
             _influxWriterService.WriteData(lineProtocolDataList, bucket, organization, precision);
 
             _logger.LogInformation("Data insertion successful.");
