@@ -3,8 +3,6 @@ using System.Text.RegularExpressions;
 public class InfluxFetcherServiceTests
 {
 
-// BuildFluxQuery
-
 
 // BuildFluxQuery
     [Fact]

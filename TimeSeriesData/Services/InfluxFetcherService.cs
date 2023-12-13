@@ -67,7 +67,7 @@ public class InfluxFetcherService : IInfluxFetcherService
                     var key = keyValue.Key;
 
                     // Check if the key is a tag key (not a reserved keyword)
-                    if (key != "_start" && key != "_stop" && key != "_time" && key != "_value" && key != "_field" && key != "_measurement")
+                    if (key != "result" && key != "table" && key != "_start" && key != "_stop" && key != "_time" && key != "_value" && key != "_field" && key != "_measurement")
                     {
                         result.Add(key);
                     }
