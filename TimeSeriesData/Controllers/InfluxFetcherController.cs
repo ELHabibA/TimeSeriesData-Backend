@@ -4,12 +4,12 @@ using Timeseriesdata.Functions;
 
 [ApiController]
 [Route("api/[controller]")]
-public class InfluxDataController : ControllerBase
+public class InfluxFetcherController : ControllerBase
 {
     private readonly IInfluxFetcherService _influxDataService;
-    private readonly ILogger<InfluxDataController> _logger;
+    private readonly ILogger<InfluxFetcherController> _logger;
 
-    public InfluxDataController(IInfluxFetcherService influxDataService, ILogger<InfluxDataController> logger)
+    public InfluxFetcherController(IInfluxFetcherService influxDataService, ILogger<InfluxFetcherController> logger)
     {
         _influxDataService = influxDataService ?? throw new ArgumentNullException(nameof(influxDataService));
         _logger = logger;
