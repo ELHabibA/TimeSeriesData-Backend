@@ -38,7 +38,7 @@ public class InfluxFetcherService : IInfluxFetcherService
         return fluxQuery;
     }
 
-    public async Task<List<string>> GetTagsForMeasurementAsync(string organization, string bucket, string measurement)
+    public async Task<List<string>> GetTagsAsync(string organization, string bucket, string measurement)
     {
         var queryApi = _influxDBClient.GetQueryApi();
 
