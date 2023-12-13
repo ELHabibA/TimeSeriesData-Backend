@@ -29,7 +29,6 @@ public class ToLineProtocolConverter
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error converting InfluxDataModel to Line Protocol: {ex.Message}");
             return null;
         }
     }

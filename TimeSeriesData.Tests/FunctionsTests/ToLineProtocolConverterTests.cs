@@ -20,19 +20,6 @@ public void ConvertToLineProtocol_ValidData_ReturnsExpectedList()
     // Act
     var result = ToLineProtocolConverter.ConvertToLineProtocol(influxDataList);
 
-    // Output for inspection
-    Console.WriteLine("Expected:");
-    foreach (var expected in expectedList)
-    {
-        Console.WriteLine(expected);
-    }
-
-    Console.WriteLine("\nActual:");
-    foreach (var actual in result)
-    {
-        Console.WriteLine(actual);
-    }
-
     // Assert
     Assert.Equal(expectedList, result);
 }
@@ -40,7 +27,6 @@ public void ConvertToLineProtocol_ValidData_ReturnsExpectedList()
 
 private List<InfluxDataModelForCreationDto> GetDummyData()
 {
-        // Replace this with your actual dummy data
         return new List<InfluxDataModelForCreationDto>
         {
             new InfluxDataModelForCreationDto
@@ -54,7 +40,6 @@ private List<InfluxDataModelForCreationDto> GetDummyData()
                 {
                     { "product_name", "7up" }
                 }
-                
             },
 
             new InfluxDataModelForCreationDto
