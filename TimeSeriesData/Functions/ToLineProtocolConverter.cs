@@ -82,7 +82,7 @@ public class ToLineProtocolConverter
     private static string EscapeFieldValue(object value)
     {
         // Implement any necessary escaping logic here
-        return value.ToString();
+        return value.ToString()!;
     }
 
     private static string GetTimestampString(string timestamp)
