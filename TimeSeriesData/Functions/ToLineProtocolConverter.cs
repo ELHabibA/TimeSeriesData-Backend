@@ -75,13 +75,11 @@ public class ToLineProtocolConverter
 
     private static string EscapeTagValue(string value)
     {
-        // Implement any necessary escaping logic here
         return value.Replace(",", "\\,");
     }
 
     private static string EscapeFieldValue(object value)
     {
-        // Implement any necessary escaping logic here
         return value.ToString()!;
     }
 
@@ -89,4 +87,6 @@ public class ToLineProtocolConverter
     {
         return string.IsNullOrWhiteSpace(timestamp) ? "" : $"{timestamp}";
     }
+
+
 }

@@ -50,11 +50,9 @@ namespace Timeseriesdata.Functions
 
         public static DateTime AdjustMonths(DateTime dateTime, int months)
         {
-            // Ensure months is within a reasonable range
             if (months > 0)
                 return dateTime.AddMonths(months);
 
-            // Going back in months while preserving day of the month
             int year = dateTime.Year;
             int month = dateTime.Month + months;
 
@@ -70,12 +68,12 @@ namespace Timeseriesdata.Functions
             return new DateTime(year, month, day, dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond, dateTime.Kind);
         }
 
-         public static DateTime? ConvertInstantToDateTime(Instant? instant)
+        public static DateTime? ConvertInstantToDateTime(Instant? instant)
          {
                 return instant?.InUtc().ToDateTimeUtc();
          }   
 
-    public static long ToInfluxTimestamp(DateTime? dateTime)
+        public static long ToInfluxTimestamp(DateTime? dateTime)
     {
         if (dateTime.HasValue)
         {

@@ -28,6 +28,7 @@ public class InfluxFetcherService : IInfluxFetcherService
         return ParseFluxTables(fluxTables);
     }
 
+
     public async Task<List<string>> GetTagsAsync(string organization, string bucket, string measurement, DateTime startTime, DateTime? endTime)
     {
         var queryApi = _influxDBClient.GetQueryApi();
@@ -36,85 +37,82 @@ public class InfluxFetcherService : IInfluxFetcherService
         from(bucket: ""{bucket}"")
         |> range(start: 0)
         |> filter(fn: (r) => r._measurement == ""{measurement}"")
-        |> keys()
-    ";
+        |> keys()";
 
         var fluxTables = await queryApi.QueryAsync(fluxQuery, organization);
 
         return ParseFluxTags(fluxTables);
     }
 
-
-
-       public async Task<List<InfluxDataModel>> GetDataByTagSetAsync(string organization, string bucket, string measurement, DateTime startTime, DateTime? endTime, Dictionary<string, string> tagSet)
-{
-    var queryApi = _influxDBClient.GetQueryApi();
-    List<InfluxDataModel> data = new List<InfluxDataModel>();
-    var fluxQuery = BuildFluxQuery(bucket, measurement, startTime, endTime);
-
-    try
+    public async Task<List<InfluxDataModel>> GetDataByTagSetAsync(string organization, string bucket, string measurement, DateTime startTime, DateTime? endTime, Dictionary<string, string> tagSet)
     {
-        var fluxTables = await queryApi.QueryAsync(fluxQuery, organization);
+            var queryApi = _influxDBClient.GetQueryApi();
+            List<InfluxDataModel> data = new List<InfluxDataModel>();
+            var fluxQuery = BuildFluxQuery(bucket, measurement, startTime, endTime);
 
-        foreach (var item in ParseFluxTables(fluxTables))
-        {
-            if (item.Tags == tagSet)
+            try
             {
-                data.Add(item);
+                var fluxTables = await queryApi.QueryAsync(fluxQuery, organization);
+
+                foreach (var item in ParseFluxTables(fluxTables))
+                {
+                    if (item.Tags.OrderBy(kvp => kvp.Key).SequenceEqual(tagSet.OrderBy(kvp => kvp.Key)))
+                    {
+                        data.Add(item);
+                    }
+                }
             }
-        }
-    }
-    catch (Exception ex)
-    {
-        // Log the exception
-        _logger.LogError(ex, "An error occurred while querying data by tag set.");
-    }
-
-    // Log relevant information about the data or any other details
-    _logger.LogInformation($"Retrieved {data.Count} data points using tag set.");
-    Console.WriteLine(data.Count);
-
-    return data;
-}
-
-
-public static string BuildFluxQuery(string bucket, string measurement, DateTime startTime, DateTime? endTime)
-{
-    // If endTime is not provided, set it to "now"
-    if(!endTime.HasValue)
-            endTime = DateTime.UtcNow;
-
-    var fluxQuery = $@"
-    from(bucket: ""{bucket}"")
-    |> range(start: {InfluxDbUtilities.ToInfluxTimestamp(startTime)}, stop: {InfluxDbUtilities.ToInfluxTimestamp(endTime)})
-    |> filter(fn: (r) => r._measurement == ""{measurement}"")";
-
-    return fluxQuery;
-}
-
-   private List<InfluxDataModel> ParseFluxTables(List<FluxTable> fluxTables)
-{
-    var result = new List<InfluxDataModel>();
-
-    foreach (var fluxTable in fluxTables)
-    {
-        foreach (var fluxRecord in fluxTable.Records)
-        {
-
-            var dataModel = new InfluxDataModel
+            catch (Exception ex)
             {
-                Measurement = fluxRecord.GetMeasurement(),
-                Tags = ExtractTags(fluxRecord),
-                Fields = ExtractFields(fluxRecord),
-                Timestamp = InfluxDbUtilities.ConvertInstantToDateTime(fluxRecord.GetTime()),
-            };
+                // Log the exception
+                _logger.LogError(ex, "An error occurred while querying data by tag set.");
+            }
 
-            result.Add(dataModel);
-        }
+            // Log relevant information about the data or any other details
+            _logger.LogInformation($"Retrieved {data.Count} data points using tag set.");
+            Console.WriteLine(data.Count);
+
+            return data;
     }
 
-    return result;
-}
+
+    public static string BuildFluxQuery(string bucket, string measurement, DateTime startTime, DateTime? endTime)
+    {
+        // If endTime is not provided, set it to "now"
+        if(!endTime.HasValue)
+                endTime = DateTime.UtcNow;
+
+        var fluxQuery = $@"
+        from(bucket: ""{bucket}"")
+        |> range(start: {InfluxDbUtilities.ToInfluxTimestamp(startTime)}, stop: {InfluxDbUtilities.ToInfluxTimestamp(endTime)})
+        |> filter(fn: (r) => r._measurement == ""{measurement}"")";
+
+        return fluxQuery;
+    }
+
+    private List<InfluxDataModel> ParseFluxTables(List<FluxTable> fluxTables)
+    {
+            var result = new List<InfluxDataModel>();
+
+            foreach (var fluxTable in fluxTables)
+            {
+                foreach (var fluxRecord in fluxTable.Records)
+                {
+
+                    var dataModel = new InfluxDataModel
+                    {
+                        Measurement = fluxRecord.GetMeasurement(),
+                        Tags = ExtractTags(fluxRecord),
+                        Fields = ExtractFields(fluxRecord),
+                        Timestamp = InfluxDbUtilities.ConvertInstantToDateTime(fluxRecord.GetTime()),
+                    };
+
+                    result.Add(dataModel);
+                }
+            }
+
+            return result;
+    }
 
 
     private Dictionary<string, string> ExtractTags(FluxRecord fluxRecord)
@@ -136,14 +134,14 @@ public static string BuildFluxQuery(string bucket, string measurement, DateTime 
 
     private Dictionary<string, object> ExtractFields(FluxRecord fluxRecord)
     {
-    var fieldDictionary = new Dictionary<string, object>();
+        var fieldDictionary = new Dictionary<string, object>();
 
-    foreach (var keyValue in fluxRecord.Values)
-    {
-    var key = fluxRecord.GetField();
-    var value = fluxRecord.GetValue();
+        foreach (var keyValue in fluxRecord.Values)
+        {
+        var key = fluxRecord.GetField();
+        var value = fluxRecord.GetValue();
 
-    fieldDictionary[key] = value;
+        fieldDictionary[key] = value;
 
     }
 
