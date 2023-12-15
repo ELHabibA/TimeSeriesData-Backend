@@ -2,7 +2,6 @@ using InfluxDB.Client;
 using InfluxDB.Client.Core.Flux.Domain;
 using Timeseriesdata.Models;
 using Timeseriesdata.Functions;
-using System.Text;
 
 
 
@@ -52,11 +51,13 @@ public class InfluxFetcherService : IInfluxFetcherService
 
             try
             {
-                var fluxTables = await queryApi.QueryAsync(fluxQuery, organization);
+                 var fluxTables = await queryApi.QueryAsync(fluxQuery, organization);
 
                 foreach (var item in ParseFluxTables(fluxTables))
                 {
-                    if (item.Tags.OrderBy(kvp => kvp.Key).SequenceEqual(tagSet.OrderBy(kvp => kvp.Key)))
+
+                    if (item.Tags != null && tagSet != null &&
+                        item.Tags.OrderBy(kvp => kvp.Key).SequenceEqual(tagSet.OrderBy(kvp => kvp.Key)))
                     {
                         data.Add(item);
                     }
@@ -64,11 +65,9 @@ public class InfluxFetcherService : IInfluxFetcherService
             }
             catch (Exception ex)
             {
-                // Log the exception
                 _logger.LogError(ex, "An error occurred while querying data by tag set.");
             }
 
-            // Log relevant information about the data or any other details
             _logger.LogInformation($"Retrieved {data.Count} data points using tag set.");
             Console.WriteLine(data.Count);
 
