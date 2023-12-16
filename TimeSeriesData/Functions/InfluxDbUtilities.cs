@@ -74,19 +74,19 @@ namespace Timeseriesdata.Functions
          }   
 
         public static long ToInfluxTimestamp(DateTime? dateTime)
-    {
-        if (dateTime.HasValue)
         {
-            var utcDateTime = dateTime.Value.ToUniversalTime();
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var timestamp = (long)(utcDateTime - epoch).TotalSeconds;
+            if (dateTime.HasValue)
+            {
+                var utcDateTime = dateTime.Value.ToUniversalTime();
+                var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                var timestamp = (long)(utcDateTime - epoch).TotalSeconds;
 
-            return timestamp;
+                return timestamp;
+            }
+
+            return 0;
         }
 
-        return 0;
-    }
 
-
-    }
+        }
 }

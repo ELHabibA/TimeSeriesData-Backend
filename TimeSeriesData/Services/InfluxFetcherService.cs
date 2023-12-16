@@ -123,8 +123,11 @@ public class InfluxFetcherService : IInfluxFetcherService
             var key = keyValue.Key;
             var value = keyValue.Value;
 
-        if(key!="result" && key!="table" && key!="_start" && key!="_stop" && key!="_time" && key!="_value" && key!="_field" && key!="_measurement" ){
+        if(key!="result" && key!="table" && key!="_start" && key!="_stop" && key!="_time" 
+           && key!="_value" && key!="_field" && key!="_measurement" ){
+
         tagDictionary[key] = (string) value;
+
         }
         }
 
@@ -135,16 +138,16 @@ public class InfluxFetcherService : IInfluxFetcherService
     {
         var fieldDictionary = new Dictionary<string, object>();
 
-        foreach (var keyValue in fluxRecord.Values)
+        for (int i = 0; i < fluxRecord.Values.Count; i++)
         {
-        var key = fluxRecord.GetField();
-        var value = fluxRecord.GetValue();
+            var key = fluxRecord.GetField();
+            var value = fluxRecord.GetValue();
 
-        fieldDictionary[key] = value;
+            fieldDictionary[key] = value;
 
-    }
+        }
 
-    return fieldDictionary;
+        return fieldDictionary;
     }
 
 
@@ -160,8 +163,9 @@ public class InfluxFetcherService : IInfluxFetcherService
                 {
                     var key = keyValue.Key;
 
-                    // Check if the key is a tag key (not a reserved keyword)
-                    if (key!="result" && key!="table" && key!="_start" && key!="_stop" && key!="_time" && key!="_value" && key!="_field" && key!="_measurement" )
+                    // Check if the key is a tag key
+                    if (key!="result" && key!="table" && key!="_start" && key!="_stop" && key!="_time" 
+                       && key!="_value" && key!="_field" && key!="_measurement" )
                     {
                         result.Add(key);
                     }

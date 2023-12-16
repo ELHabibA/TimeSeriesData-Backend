@@ -29,7 +29,7 @@ public class InfluxTagsController : ControllerBase
 
             _logger.LogInformation($"Received request for tags with parameters: organization={organization}, bucket={bucket}, measurement={measurement}");
 
-            // Fetch tags for the given measurement using the new GetTagsAsync method
+            // Fetch tags for the given measurement
             var tags = await _influxFetcherService.GetTagsAsync(organization, bucket, measurement, startTime, endTime);
 
             _logger.LogInformation("Request processed successfully.");
@@ -59,10 +59,8 @@ public class InfluxTagsController : ControllerBase
             DateTime startTime = InfluxDbUtilities.ParseTime(startTimeString) ?? DateTime.Now;
             DateTime? endTime = InfluxDbUtilities.ParseTime(endTimeString!);
 
-            // Check if keys and values are provided
             if (keys != null && values != null && keys.Length == values.Length)
             {
-                // Handle the case with keys and values (GetByTagSet logic)
                 Dictionary<string, string> tagSet = new Dictionary<string, string>();
                 for (int i = 0; i < keys.Length; i++)
                 {
