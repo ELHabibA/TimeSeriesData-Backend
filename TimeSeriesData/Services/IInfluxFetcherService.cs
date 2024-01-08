@@ -9,5 +9,8 @@ public interface IInfluxFetcherService
     Task<List<string>> GetTagsAsync(string organization, string bucket, string measurement, DateTime startTime, DateTime? endTime);
 
     Task<List<InfluxDataModel>> GetDataByTagSetAsync(string organization, string bucket, string measurement, DateTime startTime, DateTime? endTime, Dictionary<string, string> tagSet);
+
+    Task<List<string>> GetPossibleTagsValuesAsync(string organization, string bucket, string measurement, DateTime startTime, DateTime? endTime);
+
 }
 

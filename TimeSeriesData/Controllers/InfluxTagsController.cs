@@ -14,23 +14,35 @@ public class InfluxTagsController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("gettags")]
-    public async Task<IActionResult> GetTags(
+    [HttpGet("gettagsOrTagsValues")]
+    public async Task<IActionResult> GetTagsOrTagsValues(
         [FromQuery] string organization,
         [FromQuery] string bucket,
         [FromQuery] string measurement,
         [FromQuery] string startTimeString,
-        [FromQuery] string? endTimeString)
+        [FromQuery] string? endTimeString,
+        [FromQuery] bool TagsValues = false)
     {
         try
         {
             DateTime startTime = InfluxDbUtilities.ParseTime(startTimeString) ?? DateTime.Now;
             DateTime? endTime = InfluxDbUtilities.ParseTime(endTimeString!);
 
+            List<string>? tags;
+
             _logger.LogInformation($"Received request for tags with parameters: organization={organization}, bucket={bucket}, measurement={measurement}");
 
-            // Fetch tags for the given measurement
-            var tags = await _influxFetcherService.GetTagsAsync(organization, bucket, measurement, startTime, endTime);
+
+            if(TagsValues){
+                  tags = await _influxFetcherService.GetPossibleTagsValuesAsync(organization, bucket, measurement, startTime, endTime);
+            }
+            
+            
+            else {
+
+                tags = await _influxFetcherService.GetTagsAsync(organization, bucket, measurement, startTime, endTime);
+
+            }
 
             _logger.LogInformation("Request processed successfully.");
 

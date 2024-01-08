@@ -39,8 +39,21 @@ public class InfluxFetcherService : IInfluxFetcherService
         |> keys()";
 
         var fluxTables = await queryApi.QueryAsync(fluxQuery, organization);
-
         return ParseFluxTags(fluxTables);
+    }
+
+    public async Task<List<string>> GetPossibleTagsValuesAsync(string organization, string bucket, string measurement, DateTime startTime, DateTime? endTime)
+    {
+        var queryApi = _influxDBClient.GetQueryApi();
+
+        var fluxQuery = $@"
+        from(bucket: ""{bucket}"")
+        |> range(start: 0)
+        |> filter(fn: (r) => r._measurement == ""{measurement}"")
+        |> keys()";
+
+        var fluxTables = await queryApi.QueryAsync(fluxQuery, organization);
+        return ParseFluxTagsAndPossibleValues(fluxTables);
     }
 
     public async Task<List<InfluxDataModel>> GetDataByTagSetAsync(string organization, string bucket, string measurement, DateTime startTime, DateTime? endTime, Dictionary<string, string> tagSet)
@@ -179,4 +192,33 @@ public class InfluxFetcherService : IInfluxFetcherService
         return result;
     }
         
+     private List<string> ParseFluxTagsAndPossibleValues(List<FluxTable> fluxTables)
+    {
+       var result = new List<string>();
+
+        foreach (var fluxTable in fluxTables)
+        {
+            foreach (var fluxRecord in fluxTable.Records)
+            {
+                foreach (var keyValue in fluxRecord.Values)
+                {
+                    var key = keyValue.Key;
+                    var value = keyValue.Value;
+
+                    // Check if the key is a tag key
+                    if (key!="result" && key!="table" && key!="_start" && key!="_stop" && key!="_time" 
+                       && key!="_value" && key!="_field" && key!="_measurement" )
+                    {
+                         result.Add((string)value);
+                    }
+                }
+            }
+        }
+
+        // Remove duplicate tag keys if needed
+       result = result.Distinct().ToList();
+
+
+        return result;
+    }
 }
