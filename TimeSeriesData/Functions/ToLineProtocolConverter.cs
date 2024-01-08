@@ -29,7 +29,7 @@ public class ToLineProtocolConverter
         }
         catch (Exception ex)
         {
-            return null;
+            throw new Exception("Failed to Convert To Line Protocol.", ex);
         }
     }
 
@@ -75,18 +75,18 @@ public class ToLineProtocolConverter
 
     private static string EscapeTagValue(string value)
     {
-        // Implement any necessary escaping logic here
         return value.Replace(",", "\\,");
     }
 
     private static string EscapeFieldValue(object value)
     {
-        // Implement any necessary escaping logic here
-        return value.ToString();
+        return value.ToString()!;
     }
 
     private static string GetTimestampString(string timestamp)
     {
         return string.IsNullOrWhiteSpace(timestamp) ? "" : $"{timestamp}";
     }
+
+
 }

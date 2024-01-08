@@ -19,6 +19,10 @@ public class InfluxWriterController : ControllerBase
     public IActionResult PostData([FromBody] List<InfluxDataModelForCreationDto>  DataList, [FromQuery] string bucket, [FromQuery] string organization, [FromQuery] string precision = "s")
     {
         
+        if(!ModelState.IsValid){
+            
+            return BadRequest();
+        }
 
         try
         {

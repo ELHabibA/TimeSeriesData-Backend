@@ -3,7 +3,15 @@ using System.Text.RegularExpressions;
 public class InfluxFetcherServiceTests
 {
 
-// BuildFluxQuery
+// GetDataAsync
+
+
+
+//GetTagsAsync
+
+
+
+//GetDataByTagSetAsync
 
 
 // BuildFluxQuery

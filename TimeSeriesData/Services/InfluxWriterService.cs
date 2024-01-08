@@ -29,23 +29,19 @@ public class InfluxWriterService : IInfluxWriterService
         }
         catch (Exception ex)
         {
-            // Handle exception appropriately, e.g., log or rethrow
             throw new Exception("Failed to insert data into InfluxDB.", ex);
         }
     }
     public static WritePrecision MapStringToWritePrecision(string precision)
     {
-        switch (precision.ToLower())
+        return precision.ToLower() switch
         {
-            case "ms":
-                return WritePrecision.Ms;
-            case "us":
-                return WritePrecision.Us;
-            case "ns":
-                return WritePrecision.Ns;
-            default:
-                return WritePrecision.S;
-        }
+            "ms" => WritePrecision.Ms,
+            "us" => WritePrecision.Us,
+            "ns" => WritePrecision.Ns,
+            "s" => WritePrecision.S,
+            _ => throw new ArgumentException($"Invalid precision value: {precision}"),
+        };
     }
 
 }
