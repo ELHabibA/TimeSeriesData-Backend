@@ -14,7 +14,6 @@ public class InfluxFetcherServiceTests
 //GetDataByTagSetAsync
 
 
-// BuildFluxQuery
     // BuildFluxQuery
     [Fact]
     public void BuildFluxQuery_ReturnsCorrectQuery()
