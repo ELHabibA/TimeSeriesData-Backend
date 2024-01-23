@@ -1,20 +1,8 @@
 using System.Text.RegularExpressions;
-
+using Timeseriesdata.Functions;
 public class InfluxFetcherServiceTests
 {
-
-// GetDataAsync
-
-
-
-//GetTagsAsync
-
-
-
-//GetDataByTagSetAsync
-
-
-// BuildFluxQuery
+    // BuildFluxQuery
     [Fact]
     public void BuildFluxQuery_ReturnsCorrectQuery()
     {
@@ -23,20 +11,23 @@ public class InfluxFetcherServiceTests
         var measurement = "testMeasurement";
         var startTime = new DateTime(2022, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var endTime = new DateTime(2022, 1, 2, 0, 0, 0, DateTimeKind.Utc);
-        long startUnixTime = ((DateTimeOffset)startTime).ToUnixTimeSeconds();
-        long endUnixTime = ((DateTimeOffset)endTime).ToUnixTimeSeconds();
         var coco = InfluxFetcherService.BuildFluxQuery(bucket, measurement, startTime, endTime);
 
-        var expectedQuery = $@"from(bucket: ""{bucket}"")
-        |> range(start: {startUnixTime}, stop: {endUnixTime})
-        |> filter(fn: (r) => r._measurement == ""{measurement}"")";
-
-        // Normalize whitespace in expectedQuery and coco
-        var expectedNormalized = Regex.Replace(expectedQuery.Trim(), @"\s+", " ");
-        var actualNormalized = Regex.Replace(coco.Trim(), @"\s+", " ");
+        var expectedQuery = BuildExpectedFluxQuery(bucket, measurement, startTime, endTime);
 
         // Assert
-        Assert.Equal(expectedNormalized, actualNormalized, StringComparer.OrdinalIgnoreCase);
+        Assert.Equal(expectedQuery, coco, StringComparer.OrdinalIgnoreCase);
+    }
+
+
+    private string BuildExpectedFluxQuery(string bucket, string measurement, DateTime startTime, DateTime? endTime)
+    {
+        var fluxQuery = $@"
+        from(bucket: ""{bucket}"")
+        |> range(start: {InfluxDbUtilities.ToInfluxTimestamp(startTime)}, stop: {InfluxDbUtilities.ToInfluxTimestamp(endTime)})
+        |> filter(fn: (r) => r._measurement == ""{measurement}"")";
+
+        return fluxQuery;
     }
     
 }
