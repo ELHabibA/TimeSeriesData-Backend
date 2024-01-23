@@ -2,18 +2,6 @@ using System.Text.RegularExpressions;
 using Timeseriesdata.Functions;
 public class InfluxFetcherServiceTests
 {
-
-// GetDataAsync
-
-
-
-//GetTagsAsync
-
-
-
-//GetDataByTagSetAsync
-
-
     // BuildFluxQuery
     [Fact]
     public void BuildFluxQuery_ReturnsCorrectQuery()
