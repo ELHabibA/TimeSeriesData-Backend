@@ -12,8 +12,6 @@ Welcome to the Time Series Data Management System repository! This system is bui
   - [InfluxFetcherController](#influxfetchercontroller)
   - [InfluxTagsController](#influxtagscontroller)
   - [InfluxWriterController](#influxwritercontroller)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Introduction
 
