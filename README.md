@@ -30,24 +30,24 @@ To install and run this system locally, follow these steps:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/ELHabibA/TimeSeriesData-V2.git
+    git clone https://github.com/ELHabibA/TimeSeriesData-Backend.git
     ```
 
 2. Navigate to the project directory:
 
     ```bash
-    cd TimeSeriesData-V2
+    cd TimeSeriesData
     ```
 
-3. Install dependencies for both the ASP.NET Core API:
+3. Install dependencies for the ASP.NET Core API:
 
     ```bash
-    cd TimeSeriesData-V2
+    cd TimeSeriesData
     dotnet restore
 
 ## Configuration
 
-Before running the system, make sure to configure the InfluxDB connection settings in the `secret.json` file in the `TimeSeriesData-V2/Functions`.
+Before running the system, make sure to configure the InfluxDB connection settings in the `secret.json` file in the `TimeSeriesData/Functions`.
 
 ```json
 {
@@ -63,7 +63,7 @@ Before running the system, make sure to configure the InfluxDB connection settin
  Run the ASP.NET Core API:
 
     ```bash
-    cd TimeSeriesData-V2
+    cd TimeSeriesData
     dotnet run
     ```
 
