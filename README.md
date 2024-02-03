@@ -45,6 +45,28 @@ To install and run this system locally, follow these steps:
     cd TimeSeriesData
     dotnet restore
 
+
+4. Prepare and run InfluxDB locally:
+
+   - Download and install InfluxDB from the official website: [InfluxDB Downloads](https://docs.influxdata.com/influxdb/v2/install/).
+   
+   - Start InfluxDB using the appropriate command for your operating system.
+
+     For example, on Unix-based systems:
+
+     ```bash
+     influxd
+     ```
+
+     On Windows:
+
+     ```cmd
+     influxd.exe
+     ```
+
+   - Create a database for your project. You can do this using the InfluxDB command line or the web-based InfluxDB UI.
+  
+
 ## Configuration
 
 Before running the system, make sure to configure the InfluxDB connection settings in the `secret.json` file in the `TimeSeriesData/Functions`.
