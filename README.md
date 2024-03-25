@@ -1,6 +1,6 @@
-# Time Series Data Management System
+# Time Series Data Management System (API)
 
-Welcome to the Time Series Data Management System repository! This system is built using ASP.NET Core API, xUnit, and InfluxDB to efficiently manage and analyze time series data.
+Welcome to the Time Series Data Management System repository! This system is built using ASP.NET Core 7 Web API, xUnit, and InfluxDB to efficiently manage sending and retrieving time series data with InfluxDB.
 
 ## Table of Contents
 - [Introduction](#introduction)
@@ -15,7 +15,7 @@ Welcome to the Time Series Data Management System repository! This system is bui
 
 ## Introduction
 
-This system is designed to handle time series data efficiently, providing functionalities to fetch data within a given time range, retrieve tag sets in a specified range, and send data to InfluxDB as a JSON file.
+This system is designed to handle time series data efficiently, providing functionalities to fetch data within a given time range, retrieve tag sets in a specified range, and seamlessly transmitting any form of data to InfluxDB in the form of a JSON file.
 
 ## Features
 
