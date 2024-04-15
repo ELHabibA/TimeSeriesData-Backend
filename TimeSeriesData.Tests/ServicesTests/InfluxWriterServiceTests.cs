@@ -4,12 +4,6 @@ using InfluxDB.Client.Api.Domain;
 public class InfluxWriterServiceTests
 {
 
-
-
-// WriteData
-
-
-
 // MapStringToWritePrecision
     [Theory]
     [InlineData("ms", WritePrecision.Ms)]
